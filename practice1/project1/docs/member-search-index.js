@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"ua.edu.sumdu.j2se.pr1.operations","c":"Operation","l":"getResult()"},{"p":"ua.edu.sumdu.j2se.pr1.operations","c":"Operation","l":"Operation(int, int)","url":"%3Cinit%3E(int,int)"}]
