@@ -55,15 +55,18 @@ public class ArrayTaskList {
     }
 
     public ArrayTaskList incoming(int from, int to){
-        int i = 0;
+
+        ArrayTaskList TaskArr = new ArrayTaskList();
+
         for (Task currentTask:
                 arrayTask) {
-           // if (currentTask.equals(task)) {
-               // indexElementToBeDeleted  = i;
-           // }
-            i++;
+            int nextTime = currentTask.nextTimeAfter(from);
+
+            if (from <= nextTime&&nextTime <= to) {
+                TaskArr.add(currentTask);
+            }
         }
-        return null;
+        return TaskArr;
     }
 
     private Task [] removeElement(Task [] arr, int index ){

@@ -112,7 +112,7 @@ public class Task {
      * @return name of the task
      */
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     private void setRepeated(final boolean isRepeated) {
@@ -124,7 +124,7 @@ public class Task {
      * @return time of the task in hours from the beginning of a day
      */
     public int getTime() {
-        return this.startTime;
+        return startTime;
     }
 
     /**
@@ -132,7 +132,7 @@ public class Task {
      * @return return time of the task in hours from the beginning of a day
      */
     public int getStartTime() {
-        return this.startTime;
+        return startTime;
     }
 
     /**
@@ -140,7 +140,7 @@ public class Task {
      * @return return time of the task in hours from the beginning of a day
      */
     public int getEndTime() {
-        return this.endTime;
+        return endTime;
     }
 
     /**
@@ -148,7 +148,7 @@ public class Task {
      * @return 0 if not repeated
      */
     public int getRepeatInterval() {
-        return this.interval;
+        return interval;
     }
 
     /**
@@ -156,7 +156,7 @@ public class Task {
      * @return true if active
      */
     public boolean isActive() {
-        return this.active;
+        return active;
     }
 
     /**
@@ -164,7 +164,7 @@ public class Task {
      * @return true if repeated
      */
     public boolean isRepeated() {
-        return this.repeated;
+        return repeated;
     }
 
     /**
@@ -180,17 +180,17 @@ public class Task {
             return -1; //task already complete
         }
 
-        int i = this.startTime;
+        int i = startTime;
 
         do {
             if (current <= i) {
                 break;
             }
-            i = i + this.interval;
+            i = i + interval;
         }
-        while (i <= this.endTime);
+        while (i <= endTime);
 
-        if (i > this.endTime) {
+        if (i > endTime) {
             return -1; //if i + interval = endTime than return error
         } else {
             return i;

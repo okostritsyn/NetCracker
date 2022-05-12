@@ -1,7 +1,5 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
-import java.util.Arrays;
-
 public class Main {
 
 	public static void main(String[] args) {
@@ -12,14 +10,17 @@ public class Main {
 		Task task3 = new Task("test3",16); //simple
 		Task task4 = new Task("test3",12,15,4); //repeatable with interval bigger than end
 
+		//settings parameters
+		task1.setActive(true);
+		task2.setActive(true);
+		task3.setActive(true);
+		task4.setActive(true);
+
 		ArrayTaskList TaskArr = new ArrayTaskList();
-		System.out.println(TaskArr.size());
 		TaskArr.add(task1);
-		System.out.println(TaskArr.size());
 		TaskArr.add(task2);
-		System.out.println(TaskArr.size());
 		TaskArr.add(task3);
-		System.out.println(TaskArr.size());
+		TaskArr.add(task4);
 
 		boolean status = TaskArr.remove(task1);
 		System.out.println("Remove element status "+status+" new size:"+TaskArr.size());
@@ -27,5 +28,12 @@ public class Main {
 		Task currentTask = TaskArr.getTask(0);
 		System.out.println(currentTask.getTitle());
 
+		ArrayTaskList TaskArrIncoming = TaskArr.incoming(10,15);
+		System.out.println("Found "+TaskArrIncoming.size()+" elements from "+10+" to "+15);
+
+		for (int i = 0;i < TaskArrIncoming.size();i++) {
+			Task currTask = TaskArrIncoming.getTask(i);
+			System.out.println(currTask.getTitle());
 		}
+	}
 }
