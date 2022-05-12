@@ -54,7 +54,19 @@ public class ArrayTaskList {
         }
     }
 
-    private Task[] removeElement( Task [] arr, int index ){
+    public ArrayTaskList incoming(int from, int to){
+        int i = 0;
+        for (Task currentTask:
+                arrayTask) {
+           // if (currentTask.equals(task)) {
+               // indexElementToBeDeleted  = i;
+           // }
+            i++;
+        }
+        return null;
+    }
+
+    private Task [] removeElement(Task [] arr, int index ){
         Task[] arrDestination = new Task[arr.length - 1];
         int remainingElements = arr.length - ( index + 1 );
         System.arraycopy(arr, 0, arrDestination, 0, index);
