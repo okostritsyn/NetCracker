@@ -21,7 +21,7 @@ public class Main {
 		TaskArr.add(task3);
 		System.out.println(TaskArr.size());
 
-		boolean status = TaskArr.remove(task4);
+		boolean status = TaskArr.remove(task1);
 		System.out.println("Remove element status "+status+" new size:"+TaskArr.size());
 
 		Task currentTask = TaskArr.getTask(0);
