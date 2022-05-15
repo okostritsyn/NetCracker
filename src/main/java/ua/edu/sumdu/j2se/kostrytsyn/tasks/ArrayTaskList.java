@@ -2,10 +2,21 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.util.Arrays;
 
+/**
+ * Class create array of tasks and methods to work with them.
+ * @author Kostrytsyn Oleg
+ *
+ * @version 0.1
+ */
 public class ArrayTaskList {
-
+    /** Create array of tasks. */
     private Task[] arrayTask;
 
+    /**
+     * Add task to array {@link ArrayTaskList}.
+     * Increase size of array if needed
+     * @param task - Link on the task
+     */
     public void add(Task task){
         if (arrayTask == null) {
             arrayTask = new Task[]{task};
@@ -17,6 +28,11 @@ public class ArrayTaskList {
         System.out.println("Elements after add -- "+Arrays.toString(arrayTask));
     }
 
+    /**
+     * Remove task from array {@link ArrayTaskList}.
+     * Decrease size of array if needed
+     * @param task - Link on the task
+     */
     public boolean remove(Task task){
         if (arrayTask == null) {
             return false;
@@ -38,6 +54,9 @@ public class ArrayTaskList {
         return false;
     }
 
+    /**
+     * Get current size of array {@link ArrayTaskList}.
+     */
     public int size(){
         if (arrayTask == null) {
             return -1;
@@ -46,6 +65,10 @@ public class ArrayTaskList {
         }
     }
 
+    /**
+     * Get task from array on index{@link ArrayTaskList}.
+      * @param index - Index of the task in array
+     */
     public Task getTask(int index){
         if (arrayTask == null) {
             return null;
@@ -54,9 +77,18 @@ public class ArrayTaskList {
         }
     }
 
+    /**
+     * Get array of tasks which can be done in interval from array {@link ArrayTaskList}.
+     * @param from - interval in hours
+     * @param to - interval in hours
+     */
     public ArrayTaskList incoming(int from, int to){
 
         ArrayTaskList TaskArr = new ArrayTaskList();
+
+        if (from > to) {
+            return TaskArr;
+        }
 
         for (Task currentTask:
                 arrayTask) {
