@@ -11,6 +11,8 @@ import java.util.Arrays;
 public class ArrayTaskList {
     /** Create array of tasks. */
     private Task[] arrayTask;
+    /** quantity task in the array  */
+    public int numOfElem;
 
     /**
      * Add task to array {@link ArrayTaskList}.
@@ -19,12 +21,13 @@ public class ArrayTaskList {
      */
     public void add(Task task){
         if (arrayTask == null) {
-            arrayTask = new Task[]{task};
-        } else {
-            int newCapacity = arrayTask.length + 1;
+            arrayTask = new Task[10];
+        } else if (numOfElem==arrayTask.length) {
+            int newCapacity = arrayTask.length + 10;
             arrayTask = Arrays.copyOf(arrayTask, newCapacity);
-            arrayTask[arrayTask.length-1] = task;
         }
+        arrayTask[numOfElem] = task;
+        numOfElem++;
         System.out.println("Elements after add -- "+Arrays.toString(arrayTask));
     }
 
@@ -41,13 +44,16 @@ public class ArrayTaskList {
             int i = 0;
             for (Task currentTask:
                     arrayTask) {
-                if (currentTask.equals(task)) {
+                if (currentTask == null){
+                   continue;
+                }else if (currentTask.equals(task)) {
                     indexElementToBeDeleted  = i;
                 }
                 i++;
             }
             if (indexElementToBeDeleted >= 0) {
                 arrayTask = removeElement(arrayTask,indexElementToBeDeleted);
+                numOfElem--;
                 return true;
             }
         }
@@ -92,6 +98,9 @@ public class ArrayTaskList {
 
         for (Task currentTask:
                 arrayTask) {
+            if (currentTask == null){
+                continue;
+            }
             int nextTime = currentTask.nextTimeAfter(from);
 
             if (from <= nextTime&&nextTime <= to) {
