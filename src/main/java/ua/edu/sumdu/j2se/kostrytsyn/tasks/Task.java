@@ -183,7 +183,7 @@ public class Task {
         int i = this.startTime;
 
         do {
-            if (current <= i) {
+            if (current < i) {
                 break;
             }
             i = i + this.interval;
