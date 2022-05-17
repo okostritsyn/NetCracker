@@ -183,7 +183,7 @@ public class Task {
         int i = startTime;
 
         do {
-            if (current <= i) {
+            if (current < i) {
                 break;
             }
             i = i + interval;

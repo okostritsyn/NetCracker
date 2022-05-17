@@ -10,7 +10,7 @@ import java.util.Arrays;
  */
 public class ArrayTaskList {
     /** Create array of tasks. */
-    private Task[] arrayTask;
+    private Task[] arrayTask = new Task[0];
     /** quantity task in the array  */
     public int numOfElem;
 
@@ -20,10 +20,8 @@ public class ArrayTaskList {
      * @param task - Link on the task
      */
     public void add(Task task){
-        if (arrayTask == null) {
-            arrayTask = new Task[10];
-        } else if (numOfElem==arrayTask.length) {
-            int newCapacity = arrayTask.length + 10;
+       if (numOfElem==arrayTask.length) {
+            int newCapacity = arrayTask.length + 1;
             arrayTask = Arrays.copyOf(arrayTask, newCapacity);
         }
         arrayTask[numOfElem] = task;
