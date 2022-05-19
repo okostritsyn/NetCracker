@@ -8,22 +8,18 @@ import java.util.Arrays;
  *
  * @version 0.1
  */
-public class ArrayTaskList {
+public class LinkedTaskList {
     /** Create array of tasks. */
     private Task[] arrayTask;
     /** quantity task in the array  */
     public int numOfElem;
 
     /**
-     * Add task to array {@link ArrayTaskList}.
+     * Add task to array {@link LinkedTaskList}.
      * Increase size of array if needed
      * @param task - Link on the task
      */
     public void add(Task task){
-        if (task == null) {
-            System.out.println("You cannot add null task!");
-            return;
-        }
         if (arrayTask == null) {
             arrayTask = new Task[10];
         } else if (numOfElem==arrayTask.length) {
@@ -36,7 +32,7 @@ public class ArrayTaskList {
     }
 
     /**
-     * Remove task from array {@link ArrayTaskList}.
+     * Remove task from array {@link LinkedTaskList}.
      * Decrease size of array if needed
      * @param task - Link on the task
      */
@@ -65,7 +61,7 @@ public class ArrayTaskList {
     }
 
     /**
-     * Get current size of array {@link ArrayTaskList}.
+     * Get current size of array {@link LinkedTaskList}.
      */
     public int size(){
         if (arrayTask == null) {
@@ -76,13 +72,10 @@ public class ArrayTaskList {
     }
 
     /**
-     * Get task from array on index{@link ArrayTaskList}.
+     * Get task from array on index{@link LinkedTaskList}.
       * @param index - Index of the task in array
      */
-    public Task getTask(int index) throws  IndexOutOfBoundsException {
-        if (index < 0 || index >= size()){
-           throw new IndexOutOfBoundsException("Index Out Of Bounds");
-        }
+    public Task getTask(int index){
         if (arrayTask == null) {
             return null;
         } else {
@@ -91,13 +84,13 @@ public class ArrayTaskList {
     }
 
     /**
-     * Get array of tasks which can be done in interval from array {@link ArrayTaskList}.
+     * Get array of tasks which can be done in interval from array {@link LinkedTaskList}.
      * @param from - interval in hours
      * @param to - interval in hours
      */
-    public ArrayTaskList incoming(int from, int to){
+    public LinkedTaskList incoming(int from, int to){
 
-        ArrayTaskList TaskArr = new ArrayTaskList();
+        LinkedTaskList TaskArr = new LinkedTaskList();
 
         if (from > to) {
             return TaskArr;
