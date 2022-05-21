@@ -8,21 +8,25 @@ import java.util.Arrays;
  *
  * @version 0.1
  */
-public class LinkedTaskList {
+public class LinkedTaskList extends ArrayTaskList {
+
     /** Create array of tasks. */
-    private Task[] arrayTask;
+    private Task[] arrayTask = new Task[0];
     /** quantity task in the array  */
     public int numOfElem;
 
     /**
-     * Add task to array {@link LinkedTaskList}.
+     * Add task to array {@link ArrayTaskList}.
      * Increase size of array if needed
      * @param task - Link on the task
      */
     public void add(Task task){
-        if (arrayTask == null) {
-            arrayTask = new Task[10];
-        } else if (numOfElem==arrayTask.length) {
+        if (task == null) {
+            System.out.println("You cannot add null task!");
+            return;
+        }
+
+        if (numOfElem==arrayTask.length) {
             int newCapacity = arrayTask.length + 10;
             arrayTask = Arrays.copyOf(arrayTask, newCapacity);
         }
@@ -32,7 +36,7 @@ public class LinkedTaskList {
     }
 
     /**
-     * Remove task from array {@link LinkedTaskList}.
+     * Remove task from array {@link ArrayTaskList}.
      * Decrease size of array if needed
      * @param task - Link on the task
      */
@@ -45,7 +49,7 @@ public class LinkedTaskList {
             for (Task currentTask:
                     arrayTask) {
                 if (currentTask == null){
-                   continue;
+                    continue;
                 }else if (currentTask.equals(task)) {
                     indexElementToBeDeleted  = i;
                 }
@@ -61,21 +65,24 @@ public class LinkedTaskList {
     }
 
     /**
-     * Get current size of array {@link LinkedTaskList}.
+     * Get current size of array {@link ArrayTaskList}.
      */
     public int size(){
         if (arrayTask == null) {
             return -1;
         } else {
-            return arrayTask.length;
+            return numOfElem;
         }
     }
 
     /**
-     * Get task from array on index{@link LinkedTaskList}.
-      * @param index - Index of the task in array
+     * Get task from array on index{@link ArrayTaskList}.
+     * @param index - Index of the task in array
      */
-    public Task getTask(int index){
+    public Task getTask(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size()){
+            throw new IndexOutOfBoundsException("Index Out Of Bounds");
+        }
         if (arrayTask == null) {
             return null;
         } else {
@@ -84,13 +91,13 @@ public class LinkedTaskList {
     }
 
     /**
-     * Get array of tasks which can be done in interval from array {@link LinkedTaskList}.
+     * Get array of tasks which can be done in interval from array {@link ArrayTaskList}.
      * @param from - interval in hours
      * @param to - interval in hours
      */
-    public LinkedTaskList incoming(int from, int to){
+    public ArrayTaskList incoming(int from, int to){
 
-        LinkedTaskList TaskArr = new LinkedTaskList();
+        ArrayTaskList TaskArr = new ArrayTaskList();
 
         if (from > to) {
             return TaskArr;
@@ -118,4 +125,4 @@ public class LinkedTaskList {
         System.out.println("Elements after remove -- "  + Arrays.toString(arrDestination));
         return arrDestination;
     }
- }
+}

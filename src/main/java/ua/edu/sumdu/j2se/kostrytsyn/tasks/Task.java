@@ -1,4 +1,3 @@
-
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 /**
@@ -31,11 +30,10 @@ public class Task {
      * @param time - Time of the task, hours from the beginning of a day
      * @see Task#Task(String,int)
      */
-    public Task(final String titleTask, final int time)  throws IllegalArgumentException {
+    public Task(final String titleTask, final int time) throws IllegalArgumentException {
         if (time < 0) {
             throw new IllegalArgumentException("Start time must not be negative!");
         }
-
         setTitle(titleTask);
         setTime(time);
         setActive(false);
@@ -49,20 +47,22 @@ public class Task {
      * @param intervalTime - Interval of repeating, hours
      * @see Task#Task(String,int,int,int)
      */
-      public Task(final String titleTask,
-                  final int start,
-                  final int end,
-                  final int intervalTime) throws IllegalArgumentException {
-          if (start < 0) {
-                throw new IllegalArgumentException("Start time must not be negative!");
-          }
-          else if (end < 0) {
-                  throw new IllegalArgumentException("End time must not be negative!");
-          }
-          else if (intervalTime <= 0) {
-              throw new IllegalArgumentException("Interval time must not be negative and bigger than 0!");
-          }
-
+    public Task(final String titleTask,
+                final int start,
+                final int end,
+                final int intervalTime) throws IllegalArgumentException  {
+        if (start < 0) {
+            throw new IllegalArgumentException("Start time must not be negative!");
+        }
+        else if (end < 0) {
+            throw new IllegalArgumentException("End time must not be negative!");
+        }
+        else if (intervalTime < 0) {
+            throw new IllegalArgumentException("Interval time must not be negative");
+        }
+        else if (intervalTime == 0 && start != end) {
+            throw new IllegalArgumentException("Interval time must be bigger than 0!");
+        }
         setTitle(titleTask);
         setTime(start, end, intervalTime);
         setActive(false);
@@ -116,8 +116,11 @@ public class Task {
         else if (end < 0) {
             throw new IllegalArgumentException("End time must not be negative!");
         }
-        else if (intervalTime <= 0) {
-            throw new IllegalArgumentException("Interval time must not be negative and bigger than 0!");
+        else if (intervalTime < 0) {
+            throw new IllegalArgumentException("Interval time must not be negative");
+        }
+        else if (intervalTime == 0 && start != end) {
+            throw new IllegalArgumentException("Interval time must be bigger than 0!");
         }
 
         if (start > end) {
@@ -130,7 +133,9 @@ public class Task {
             this.endTime = end;
             this.interval = intervalTime;
         }
-        setRepeated(true);
+        if (intervalTime != 0) {
+            setRepeated(true);
+        }
     }
 
     /**
@@ -199,7 +204,6 @@ public class Task {
      * @return -1 if error, hours if ok
      */
     public int nextTimeAfter(final int current) {
-
         if (!isActive()) {
             return -1;
         }
@@ -210,7 +214,7 @@ public class Task {
         int i = startTime;
 
         do {
-            if (current <= i) {
+            if (current < i) {
                 break;
             }
             i = i + interval;
