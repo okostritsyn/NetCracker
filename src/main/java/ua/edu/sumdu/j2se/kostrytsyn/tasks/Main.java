@@ -1,7 +1,5 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
-import java.util.Arrays;
-
 public class Main {
 
 	public static void main(String[] args) {
@@ -18,19 +16,18 @@ public class Main {
 		task3.setActive(true);
 		task4.setActive(true);
 
-		ArrayTaskList TaskArr = new ArrayTaskList();
+		LinkedTaskList TaskArr = new LinkedTaskList();
 		TaskArr.add(task1);
 		TaskArr.add(task2);
 		TaskArr.add(task3);
 		TaskArr.add(task4);
-
-		boolean status = TaskArr.remove(task3);
+		boolean status = TaskArr.remove(task1);
 		System.out.println("Remove element status "+status+" new size:"+TaskArr.size()+" quantity "+TaskArr.numOfElem);
 
 		Task currentTask = TaskArr.getTask(0);
 		System.out.println(currentTask.getTitle());
 
-		ArrayTaskList TaskArrIncoming = TaskArr.incoming(10,15);
+		LinkedTaskList TaskArrIncoming = TaskArr.incoming(10,15);
 		System.out.println("Found "+TaskArrIncoming.size()+" elements from "+10+" to "+15);
 
 		for (int i = 0;i < TaskArrIncoming.size();i++) {
@@ -40,5 +37,6 @@ public class Main {
 			}
 			System.out.println(currTask.getTitle());
 		}
+		System.out.println(TaskArr);
 	}
 }

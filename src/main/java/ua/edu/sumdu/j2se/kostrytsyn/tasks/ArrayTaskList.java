@@ -26,7 +26,7 @@ public class ArrayTaskList {
         }
 
         if (numOfElem==arrayTask.length) {
-            int newCapacity = arrayTask.length + 10;
+            int newCapacity = arrayTask.length + 1;
             arrayTask = Arrays.copyOf(arrayTask, newCapacity);
         }
         arrayTask[numOfElem] = task;

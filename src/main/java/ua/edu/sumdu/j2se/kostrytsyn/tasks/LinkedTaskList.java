@@ -1,19 +1,43 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
-import java.util.Arrays;
+import java.lang.StringBuilder;
 
 /**
- * Class create array of tasks and methods to work with them.
+ * Class create singly linked list of tasks and methods to work with them.
  * @author Kostrytsyn Oleg
  *
  * @version 0.1
  */
-public class LinkedTaskList extends ArrayTaskList {
-
-    /** Create array of tasks. */
-    private Task[] arrayTask = new Task[0];
+public class LinkedTaskList {
+    private Node head;
     /** quantity task in the array  */
     public int numOfElem;
+
+    private static class Node{
+        public Task data;
+        public Node next;
+
+        public Node(Task data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return printLinkedList(head);
+    }
+
+    private String printLinkedList(Node startNode) {
+        StringBuilder str = new StringBuilder();
+        Node currNode = startNode;
+        do {
+            if(currNode == null) break;
+            str.append(currNode.data.toString());
+            currNode = currNode.next;
+        } while (currNode != null);
+        return "{"+str+ "}";
+    }
 
     /**
      * Add task to array {@link ArrayTaskList}.
@@ -26,13 +50,19 @@ public class LinkedTaskList extends ArrayTaskList {
             return;
         }
 
-        if (numOfElem==arrayTask.length) {
-            int newCapacity = arrayTask.length + 10;
-            arrayTask = Arrays.copyOf(arrayTask, newCapacity);
+        Node newNode = new Node(task);
+        Node currNode = head;
+
+        if (currNode == null) {
+            head = newNode;
+        } else {
+            while (currNode.next != null) {
+                currNode = currNode.next;
+            }
+            currNode.next = newNode;
         }
-        arrayTask[numOfElem] = task;
         numOfElem++;
-        System.out.println("Elements after add -- "+Arrays.toString(arrayTask));
+        System.out.println("Elements after add -- "+ printLinkedList(head));
     }
 
     /**
@@ -41,23 +71,28 @@ public class LinkedTaskList extends ArrayTaskList {
      * @param task - Link on the task
      */
     public boolean remove(Task task){
-        if (arrayTask == null) {
-            return false;
-        } else {
-            int indexElementToBeDeleted  = -1;
-            int i = 0;
-            for (Task currentTask:
-                    arrayTask) {
-                if (currentTask == null){
-                    continue;
-                }else if (currentTask.equals(task)) {
-                    indexElementToBeDeleted  = i;
+        if (head != null) {
+            boolean elementHasFound = false;
+            Node currNode = head;
+            Node prevNode = null;
+
+            do {
+                if(currNode.data == task){
+                    if(currNode == head){
+                        head = currNode.next;
+                    }else{
+                        prevNode.next = currNode.next;
+                    }
+                    elementHasFound = true;
+                    break;
                 }
-                i++;
-            }
-            if (indexElementToBeDeleted >= 0) {
-                arrayTask = removeElement(arrayTask,indexElementToBeDeleted);
+                prevNode = currNode;
+                currNode = currNode.next;
+            } while (currNode != null);
+
+            if (elementHasFound){
                 numOfElem--;
+                System.out.println("Elements after remove -- "  + printLinkedList(head));
                 return true;
             }
         }
@@ -68,11 +103,7 @@ public class LinkedTaskList extends ArrayTaskList {
      * Get current size of array {@link ArrayTaskList}.
      */
     public int size(){
-        if (arrayTask == null) {
-            return -1;
-        } else {
-            return numOfElem;
-        }
+        return numOfElem;
     }
 
     /**
@@ -83,10 +114,19 @@ public class LinkedTaskList extends ArrayTaskList {
         if (index < 0 || index >= size()){
             throw new IndexOutOfBoundsException("Index Out Of Bounds");
         }
-        if (arrayTask == null) {
+        if (head == null) {
             return null;
         } else {
-            return arrayTask[index];
+            Node currNode = head;
+            int i = 0;
+            while (currNode.next != null) {
+                if (i==index){
+                   break;
+                }
+                i++;
+                currNode = currNode.next;
+            }
+            return currNode.data;
         }
     }
 
@@ -95,34 +135,22 @@ public class LinkedTaskList extends ArrayTaskList {
      * @param from - interval in hours
      * @param to - interval in hours
      */
-    public ArrayTaskList incoming(int from, int to){
+    public LinkedTaskList incoming(int from, int to){
 
-        ArrayTaskList TaskArr = new ArrayTaskList();
+        LinkedTaskList taskArr = new LinkedTaskList();
 
         if (from > to) {
-            return TaskArr;
+            return taskArr;
         }
-
-        for (Task currentTask:
-                arrayTask) {
-            if (currentTask == null){
-                continue;
-            }
+        Node currNode = head;
+        do {
+            Task currentTask = currNode.data;
             int nextTime = currentTask.nextTimeAfter(from);
-
             if (from <= nextTime&&nextTime <= to) {
-                TaskArr.add(currentTask);
+                taskArr.add(currentTask);
             }
-        }
-        return TaskArr;
-    }
-
-    private Task [] removeElement(Task [] arr, int index ){
-        Task[] arrDestination = new Task[arr.length - 1];
-        int remainingElements = arr.length - ( index + 1 );
-        System.arraycopy(arr, 0, arrDestination, 0, index);
-        System.arraycopy(arr, index + 1, arrDestination, index, remainingElements);
-        System.out.println("Elements after remove -- "  + Arrays.toString(arrDestination));
-        return arrDestination;
+            currNode = currNode.next;
+        } while (currNode != null);
+        return taskArr;
     }
 }
