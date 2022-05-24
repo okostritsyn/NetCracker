@@ -4,6 +4,7 @@
 practice1/
 src/test/
 target/
+src/main/resources/
 
 # User-specific stuff
 .idea/**/workspace.xml
