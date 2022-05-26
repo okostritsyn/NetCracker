@@ -75,6 +75,7 @@ public class ArrayTaskList extends AbstractTaskList {
     /**
      * Get task from array on index{@link ArrayTaskList}.
      * @param index - Index of the task in array
+     * @return Task
      */
     public Task getTask(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size()){
@@ -87,39 +88,12 @@ public class ArrayTaskList extends AbstractTaskList {
         }
     }
 
-    private Task [] removeElement(Task [] arr, int index ){
+    private Task[] removeElement(Task[] arr, int index ){
         Task[] arrDestination = new Task[arr.length - 1];
         int remainingElements = arr.length - ( index + 1 );
         System.arraycopy(arr, 0, arrDestination, 0, index);
         System.arraycopy(arr, index + 1, arrDestination, index, remainingElements);
         System.out.println("Elements after remove -- "  + Arrays.toString(arrDestination));
         return arrDestination;
-    }
-
-    /**
-     * Get array of tasks which can be done in interval from array {@link ArrayTaskList}.
-     * @param from - interval in hours
-     * @param to - interval in hours
-     */
-    public ArrayTaskList incoming(int from, int to){
-
-        ArrayTaskList TaskArr = new ArrayTaskList();
-
-        if (from > to) {
-            return TaskArr;
-        }
-
-        for (Task currentTask:
-                arrayTask) {
-            if (currentTask == null){
-                continue;
-            }
-            int nextTime = currentTask.nextTimeAfter(from);
-
-            if (from <= nextTime&&nextTime <= to) {
-                TaskArr.add(currentTask);
-            }
-        }
-        return TaskArr;
     }
 }

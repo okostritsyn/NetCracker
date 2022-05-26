@@ -1,6 +1,6 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
-import java.lang.StringBuilder;
+import java.util.Iterator;
 
 /**
  * Class create singly linked list of tasks and methods to work with them.
@@ -8,7 +8,7 @@ import java.lang.StringBuilder;
  *
  * @version 0.1
  */
-public class LinkedTaskList extends AbstractTaskList {
+public class LinkedTaskList_iterator extends AbstractTaskList implements Iterable {
     private Node head;
     /** quantity task in the array  */
 
@@ -22,9 +22,44 @@ public class LinkedTaskList extends AbstractTaskList {
         }
     }
 
+    private static class LinkedTaskListIterator implements Iterator {
+        public Node current;
+
+        // initialize pointer to head of the list for iteration
+        public LinkedTaskListIterator(LinkedTaskList_iterator list)
+        {
+            Node current = list.head;
+        }
+
+        // returns false if next element does not exist
+        public boolean hasNext()
+        {
+            return current != null;
+        }
+
+        // return current data and update pointer
+        public Task next()
+        {
+            Task data = current.data;
+            current = current.next;
+            return data;
+        }
+
+        // implement if needed
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
+
     @Override
     public String toString() {
         return printLinkedList(head);
+    }
+
+    //for iterable interface
+    public Iterator iterator() {
+        return new LinkedTaskListIterator(this);
     }
 
     private String printLinkedList(Node startNode) {
@@ -128,5 +163,33 @@ public class LinkedTaskList extends AbstractTaskList {
             }
             return currNode.data;
         }
+    }
+
+    /**
+     * Get array of tasks which can be done in interval from array {@link ArrayTaskList}.
+     * @param from - interval in hours
+     * @param to - interval in hours
+     */
+    public LinkedTaskList_iterator incoming(int from, int to){
+
+        LinkedTaskList_iterator taskArr = new LinkedTaskList_iterator();
+
+        if (from > to) {
+            return taskArr;
+        }
+
+        //Node currNode = head;
+        /*
+        do {
+            Task currentTask = currNode.data;
+            int nextTime = currentTask.nextTimeAfter(from);
+            if (from <= nextTime&&nextTime <= to) {
+                taskArr.add(currentTask);
+            }
+            currNode = currNode.next;
+        } while (currNode != null);
+        */
+        return taskArr;
+
     }
 }
