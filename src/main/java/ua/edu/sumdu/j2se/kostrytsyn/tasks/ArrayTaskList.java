@@ -8,11 +8,9 @@ import java.util.Arrays;
  *
  * @version 0.1
  */
-public class ArrayTaskList {
+public class ArrayTaskList extends AbstractTaskList {
     /** Create array of tasks. */
     private Task[] arrayTask = new Task[0];
-    /** quantity task in the array  */
-    public int numOfElem;
 
     /**
      * Add task to array {@link ArrayTaskList}.
@@ -89,6 +87,15 @@ public class ArrayTaskList {
         }
     }
 
+    private Task [] removeElement(Task [] arr, int index ){
+        Task[] arrDestination = new Task[arr.length - 1];
+        int remainingElements = arr.length - ( index + 1 );
+        System.arraycopy(arr, 0, arrDestination, 0, index);
+        System.arraycopy(arr, index + 1, arrDestination, index, remainingElements);
+        System.out.println("Elements after remove -- "  + Arrays.toString(arrDestination));
+        return arrDestination;
+    }
+
     /**
      * Get array of tasks which can be done in interval from array {@link ArrayTaskList}.
      * @param from - interval in hours
@@ -114,14 +121,5 @@ public class ArrayTaskList {
             }
         }
         return TaskArr;
-    }
-
-    private Task [] removeElement(Task [] arr, int index ){
-        Task[] arrDestination = new Task[arr.length - 1];
-        int remainingElements = arr.length - ( index + 1 );
-        System.arraycopy(arr, 0, arrDestination, 0, index);
-        System.arraycopy(arr, index + 1, arrDestination, index, remainingElements);
-        System.out.println("Elements after remove -- "  + Arrays.toString(arrDestination));
-        return arrDestination;
     }
 }

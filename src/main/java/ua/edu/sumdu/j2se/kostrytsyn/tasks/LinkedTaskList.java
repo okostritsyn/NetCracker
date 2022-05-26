@@ -1,6 +1,8 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.lang.StringBuilder;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Class create singly linked list of tasks and methods to work with them.
@@ -8,10 +10,9 @@ import java.lang.StringBuilder;
  *
  * @version 0.1
  */
-public class LinkedTaskList {
+public class LinkedTaskList extends AbstractTaskList  {
     private Node head;
     /** quantity task in the array  */
-    public int numOfElem;
 
     private static class Node{
         public Task data;
