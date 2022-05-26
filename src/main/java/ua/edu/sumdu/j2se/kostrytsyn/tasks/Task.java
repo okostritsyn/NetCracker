@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.util.Objects;
 
+
 /**
  * Class create tasks which can be set on a time.
  * @author Kostrytsyn Oleg
@@ -32,6 +33,7 @@ public class Task {
      * @param time - Time of the task, hours from the beginning of a day
      * @see Task#Task(String,int)
      */
+
     public Task(final String titleTask, final int time) throws IllegalArgumentException {
         if (time < 0) {
             throw new IllegalArgumentException("Start time must not be negative!");
@@ -91,10 +93,11 @@ public class Task {
      * If task is repeatable it becomes non repeatable
      * @param time - in hours from the beginning of a day
      */
-    public void setTime(final int time) throws IllegalArgumentException {
+   public void setTime(final int time) throws IllegalArgumentException {
         if (time < 0) {
             throw new IllegalArgumentException("Start time must not be negative!");
         }
+
 
         if (isRepeated()) {
             setRepeated(false);
@@ -230,3 +233,4 @@ public class Task {
         }
     }
 }
+
