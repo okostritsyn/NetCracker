@@ -20,7 +20,12 @@ public class ArrayTaskList {
      * @param task - Link on the task
      */
     public void add(Task task){
-       if (numOfElem==arrayTask.length) {
+        if (task == null) {
+            System.out.println("You cannot add null task!");
+            return;
+        }
+
+        if (numOfElem==arrayTask.length) {
             int newCapacity = arrayTask.length + 1;
             arrayTask = Arrays.copyOf(arrayTask, newCapacity);
         }
@@ -43,7 +48,7 @@ public class ArrayTaskList {
             for (Task currentTask:
                     arrayTask) {
                 if (currentTask == null){
-                   continue;
+                    continue;
                 }else if (currentTask.equals(task)) {
                     indexElementToBeDeleted  = i;
                 }
@@ -65,15 +70,18 @@ public class ArrayTaskList {
         if (arrayTask == null) {
             return -1;
         } else {
-            return arrayTask.length;
+            return numOfElem;
         }
     }
 
     /**
      * Get task from array on index{@link ArrayTaskList}.
-      * @param index - Index of the task in array
+     * @param index - Index of the task in array
      */
-    public Task getTask(int index){
+    public Task getTask(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size()){
+            throw new IndexOutOfBoundsException("Index Out Of Bounds");
+        }
         if (arrayTask == null) {
             return null;
         } else {
@@ -116,4 +124,5 @@ public class ArrayTaskList {
         System.out.println("Elements after remove -- "  + Arrays.toString(arrDestination));
         return arrDestination;
     }
- }
+}
+

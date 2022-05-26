@@ -1,5 +1,7 @@
-
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
+
+import java.util.Objects;
+
 
 /**
  * Class create tasks which can be set on a time.
@@ -31,7 +33,11 @@ public class Task {
      * @param time - Time of the task, hours from the beginning of a day
      * @see Task#Task(String,int)
      */
-    public Task(final String titleTask, final int time) {
+
+    public Task(final String titleTask, final int time) throws IllegalArgumentException {
+        if (time < 0) {
+            throw new IllegalArgumentException("Start time must not be negative!");
+        }
         setTitle(titleTask);
         setTime(time);
         setActive(false);
@@ -45,10 +51,22 @@ public class Task {
      * @param intervalTime - Interval of repeating, hours
      * @see Task#Task(String,int,int,int)
      */
-      public Task(final String titleTask,
-                  final int start,
-                  final int end,
-                  final int intervalTime) {
+    public Task(final String titleTask,
+                final int start,
+                final int end,
+                final int intervalTime) throws IllegalArgumentException  {
+        if (start < 0) {
+            throw new IllegalArgumentException("Start time must not be negative!");
+        }
+        else if (end < 0) {
+            throw new IllegalArgumentException("End time must not be negative!");
+        }
+        else if (intervalTime < 0) {
+            throw new IllegalArgumentException("Interval time must not be negative");
+        }
+        else if (intervalTime == 0 && start != end) {
+            throw new IllegalArgumentException("Interval time must be bigger than 0!");
+        }
         setTitle(titleTask);
         setTime(start, end, intervalTime);
         setActive(false);
@@ -75,7 +93,12 @@ public class Task {
      * If task is repeatable it becomes non repeatable
      * @param time - in hours from the beginning of a day
      */
-    public void setTime(final int time) {
+   public void setTime(final int time) throws IllegalArgumentException {
+        if (time < 0) {
+            throw new IllegalArgumentException("Start time must not be negative!");
+        }
+
+
         if (isRepeated()) {
             setRepeated(false);
         }
@@ -91,7 +114,20 @@ public class Task {
      */
     public void setTime(final int start,
                         final int end,
-                        final int intervalTime) {
+                        final int intervalTime) throws IllegalArgumentException {
+        if (start < 0) {
+            throw new IllegalArgumentException("Start time must not be negative!");
+        }
+        else if (end < 0) {
+            throw new IllegalArgumentException("End time must not be negative!");
+        }
+        else if (intervalTime < 0) {
+            throw new IllegalArgumentException("Interval time must not be negative");
+        }
+        else if (intervalTime == 0 && start != end) {
+            throw new IllegalArgumentException("Interval time must be bigger than 0!");
+        }
+
         if (start > end) {
             System.out.println("End time must be bigger or equal of start time."
                     + "Task will be not repeatable!");
@@ -197,3 +233,4 @@ public class Task {
         }
     }
 }
+
