@@ -1,6 +1,6 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
-public abstract class AbstractTaskList  {
+public abstract class AbstractTaskList implements Iterable<Task> {
     public int numOfElem;
 
     public abstract void add(Task task);
@@ -14,13 +14,25 @@ public abstract class AbstractTaskList  {
      * @param to - interval in hours
      */
     public AbstractTaskList incoming(int from, int to){
-        AbstractTaskList TaskArr = new ArrayTaskList();
+        AbstractTaskList TaskArr = TaskListFactory.createTaskList(ListTypes.types.ARRAY);
 
         if (from > to) {
             return TaskArr;
         }
-        for(int i = 0;i<size();i++){
+        /*for(int i = 0;i<size();i++){
             Task currentTask = getTask(i);
+            if (currentTask == null){
+                continue;
+            }
+            int nextTime = currentTask.nextTimeAfter(from);
+
+            if (from <= nextTime&&nextTime <= to) {
+                TaskArr.add(currentTask);
+            }
+        }*/
+
+        for (Task currentTask:
+             this) {
             if (currentTask == null){
                 continue;
             }

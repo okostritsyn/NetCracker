@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Class create array of tasks and methods to work with them.
@@ -11,6 +12,42 @@ import java.util.Arrays;
 public class ArrayTaskList extends AbstractTaskList {
     /** Create array of tasks. */
     private Task[] arrayTask = new Task[0];
+
+    private static class ArrayTaskListIterator implements Iterator<Task> {
+        public ArrayTaskList current;
+        public int currentIndex;
+        // initialize pointer to head of the list for iteration
+        public ArrayTaskListIterator(ArrayTaskList list)
+        {
+            current = list;
+            currentIndex = 0;
+        }
+
+        // returns false if next element does not exist
+        public boolean hasNext()
+        {
+            return currentIndex < current.size();
+        }
+
+        // return current data and update pointer
+        public Task next()
+        {
+            Task data = current.getTask(currentIndex);
+            currentIndex++;
+            return data;
+        }
+
+        // implement if needed
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    //for iterable interface
+    public Iterator<Task> iterator() {
+        return new ArrayTaskListIterator(this);
+    }
 
     /**
      * Add task to array {@link ArrayTaskList}.

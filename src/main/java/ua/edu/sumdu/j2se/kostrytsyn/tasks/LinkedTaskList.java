@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.lang.StringBuilder;
+import java.util.Iterator;
 
 /**
  * Class create singly linked list of tasks and methods to work with them.
@@ -20,6 +21,41 @@ public class LinkedTaskList extends AbstractTaskList {
             this.data = data;
             this.next = null;
         }
+    }
+
+    private static class LinkedTaskListIterator implements Iterator<Task> {
+        public Node current;
+
+        // initialize pointer to head of the list for iteration
+        public LinkedTaskListIterator(LinkedTaskList list)
+        {
+            current = list.head;
+        }
+
+        // returns false if next element does not exist
+        public boolean hasNext()
+        {
+            return current != null;
+        }
+
+        // return current data and update pointer
+        public Task next()
+        {
+            Task data = current.data;
+            current = current.next;
+            return data;
+        }
+
+        // implement if needed
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    //for iterable interface
+    public Iterator<Task> iterator() {
+        return new LinkedTaskListIterator(this);
     }
 
     @Override

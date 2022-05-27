@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
+import java.util.Iterator;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -41,5 +43,24 @@ public class Main {
 			}
 			System.out.println(currTask.getTitle());
 		}
+
+		AbstractTaskList TaskArrSecond = TaskListFactory.createTaskList(ListTypes.types.LINKED);
+
+		TaskArrSecond.add(task1);
+		TaskArrSecond.add(task2);
+		TaskArrSecond.add(task3);
+		TaskArrSecond.add(task4);
+		System.out.println(TaskArrSecond.size());
+
+		for (Task currTask2:
+			 TaskArrSecond) {
+			System.out.println(currTask2.getTitle());
+		}
+
+		for(Iterator<Task> currTask2 = TaskArrSecond.iterator();currTask2.hasNext();  )
+		{
+			System.out.println(currTask2.next().getTitle());
+		}
+
 	}
 }
