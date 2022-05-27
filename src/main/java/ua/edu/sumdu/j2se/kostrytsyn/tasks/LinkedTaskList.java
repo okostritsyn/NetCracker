@@ -1,6 +1,5 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
-import java.lang.StringBuilder;
 import java.util.Iterator;
 
 /**
@@ -11,7 +10,6 @@ import java.util.Iterator;
  */
 public class LinkedTaskList extends AbstractTaskList {
     private Node head;
-    /** quantity task in the array  */
 
     private static class Node{
         private final Task data;
@@ -25,11 +23,15 @@ public class LinkedTaskList extends AbstractTaskList {
 
     private static class LinkedTaskListIterator implements Iterator<Task> {
         public Node current;
+        public LinkedTaskList list;
+        public Task data;
 
         // initialize pointer to head of the list for iteration
         public LinkedTaskListIterator(LinkedTaskList list)
         {
+            this.list = list;
             current = list.head;
+            data = null;
         }
 
         // returns false if next element does not exist
@@ -41,15 +43,18 @@ public class LinkedTaskList extends AbstractTaskList {
         // return current data and update pointer
         public Task next()
         {
-            Task data = current.data;
+            data = current.data;
             current = current.next;
             return data;
         }
 
         // implement if needed
-        public void remove()
+        public void remove () throws IllegalStateException
         {
-            throw new UnsupportedOperationException();
+            if (current == null || data == null) {
+                throw new IllegalStateException();
+            }
+            list.remove(data);
         }
     }
 
@@ -59,19 +64,22 @@ public class LinkedTaskList extends AbstractTaskList {
     }
 
     @Override
-    public String toString() {
-        return printLinkedList(head);
+    public int hashCode(){
+        return super.hashCode();
     }
 
-    private String printLinkedList(Node startNode) {
-        StringBuilder str = new StringBuilder();
-        Node currNode = startNode;
-        do {
-            if(currNode == null) break;
-            str.append(currNode.data.toString());
-            currNode = currNode.next;
-        } while (currNode != null);
-        return "{"+str+ "}";
+    @Override
+    public LinkedTaskList clone() throws CloneNotSupportedException {
+        LinkedTaskList TaskList = new LinkedTaskList();
+
+        for (Task currentTask:
+                this) {
+            if (currentTask == null){
+                continue;
+            }
+            TaskList.add(currentTask);
+        }
+        return TaskList;
     }
 
     /**
@@ -97,7 +105,8 @@ public class LinkedTaskList extends AbstractTaskList {
             currNode.next = newNode;
         }
         numOfElem++;
-        System.out.println("Elements after add -- "+ printLinkedList(head));
+        updateHashSum();
+        System.out.println("Elements after add -- "+ this);
     }
 
     /**
@@ -127,7 +136,8 @@ public class LinkedTaskList extends AbstractTaskList {
 
             if (elementHasFound){
                 numOfElem--;
-                System.out.println("Elements after remove -- "  + printLinkedList(head));
+                updateHashSum();
+                System.out.println("Elements after remove -- "  + this);
                 return true;
             }
         }
