@@ -70,14 +70,16 @@ public class LinkedTaskList extends AbstractTaskList {
 
     @Override
     public LinkedTaskList clone() throws CloneNotSupportedException {
-        LinkedTaskList TaskList = new LinkedTaskList();
+        LinkedTaskList TaskList = (LinkedTaskList) super.clone();
+        TaskList.head = null;
+        TaskList.numOfElem = 0;
 
-        for (Task currentTask:
+       for (Task currentTask:
                 this) {
             if (currentTask == null){
                 continue;
             }
-            TaskList.add(currentTask);
+            TaskList.add((Task) currentTask.clone());
         }
         return TaskList;
     }
