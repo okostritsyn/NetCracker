@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * Class create singly linked list of tasks and methods to work with them.
@@ -61,6 +62,20 @@ public class LinkedTaskList extends AbstractTaskList {
     //for iterable interface
     public Iterator<Task> iterator() {
         return new LinkedTaskListIterator(this);
+    }
+
+    @Override
+    public Stream<Task> getStream(){
+        Stream.Builder<Task> stream = Stream.builder();
+        for (Task currentTask:
+                this) {
+            if (currentTask == null){
+                continue;
+            }
+            stream.add(currentTask);
+        }
+
+        return stream.build();
     }
 
     @Override

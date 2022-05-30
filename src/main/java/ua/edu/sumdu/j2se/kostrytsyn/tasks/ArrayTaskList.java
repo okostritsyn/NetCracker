@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * Class create array of tasks and methods to work with them.
@@ -52,6 +53,11 @@ public class ArrayTaskList extends AbstractTaskList {
     //for iterable interface
     public Iterator<Task> iterator() {
         return new ArrayTaskListIterator(this);
+    }
+
+    @Override
+    public Stream<Task> getStream(){
+        return Arrays.stream(arrayTask);
     }
 
     @Override
@@ -165,4 +171,5 @@ public class ArrayTaskList extends AbstractTaskList {
         System.arraycopy(arr, index + 1, arrDestination, index, remainingElements);
         return arrDestination;
     }
+
 }

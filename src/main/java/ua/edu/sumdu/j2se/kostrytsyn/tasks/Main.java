@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class Main {
 
@@ -30,11 +31,11 @@ public class Main {
 
 		System.out.println("All elements are " +TaskArr);
 
-		AbstractTaskList TaskArrIncoming = TaskArr.incoming(10, 15);
+		List<Task> TaskArrIncoming = TaskArr.incoming(10, 15);
 		System.out.println("Found " + TaskArrIncoming.size() + " elements from " + 10 + " to " + 15);
 
 		for (int i = 0; i < TaskArrIncoming.size(); i++) {
-			Task currTask = TaskArrIncoming.getTask(i);
+			Task currTask = TaskArrIncoming.get(i);
 			if (currTask == null) {
 				continue;
 			}

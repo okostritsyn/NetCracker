@@ -2,7 +2,10 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.lang.StringBuilder;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
     public int numOfElem;
@@ -12,6 +15,7 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
     public abstract boolean remove(Task task);
     public abstract int size();
     public abstract Task getTask(int index) throws IndexOutOfBoundsException;
+    public abstract Stream<Task> getStream();
 
     @Override
     public abstract Iterator<Task> iterator();
@@ -52,27 +56,15 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
         hashOfList = Objects.hash(this);
     }
 
+
     /**
      * Get array of tasks which can be done in interval from array {@link ArrayTaskList}.
      * @param from - interval in hours
      * @param to - interval in hours
      */
-    public AbstractTaskList incoming(int from, int to){
-        AbstractTaskList TaskArr = TaskListFactory.createTaskList(ListTypes.types.ARRAY);
-        if (from > to) {
-            return TaskArr;
-        }
-        for (Task currentTask:
-             this) {
-            if (currentTask == null){
-                continue;
-            }
-            int nextTime = currentTask.nextTimeAfter(from);
+    public final List<Task> incoming(int from, int to){
+        return getStream().filter((t)-> t.nextTimeAfter(from) >= from && t.nextTimeAfter(from) <= to
+                && t != null).collect(Collectors.toList());
 
-            if (from <= nextTime&&nextTime <= to) {
-                TaskArr.add(currentTask);
-            }
-        }
-        return TaskArr;
-    }
+     }
 }
