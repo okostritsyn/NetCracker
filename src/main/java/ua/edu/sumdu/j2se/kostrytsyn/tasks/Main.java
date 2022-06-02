@@ -79,5 +79,6 @@ public class Main {
 
 		System.out.println("hash code "+TaskArrSecond.hashCode());
 
+		System.out.println("calendar "+Tasks.calendar(TaskArrSecond,LocalDateTime.of(2022,01,01,11,00,00,00),LocalDateTime.of(2022,12,01,11,00,00,00)));
 	}
 }
