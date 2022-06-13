@@ -85,6 +85,10 @@ public class ArrayTaskList extends AbstractTaskList {
         return TaskList;
     }
 
+    public Task[] toArray(){
+        return arrayTask;
+    }
+
     /**
      * Add task to array {@link ArrayTaskList}.
      * Increase size of array if needed

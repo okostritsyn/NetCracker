@@ -1,15 +1,57 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 public class TaskIO {
+    static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
+        @Override
+        public LocalDateTime read(JsonReader reader) throws IOException {
+            reader.beginObject();
+            int nanoSec = 0;
+            long secOfEpoch = 0;
+            String fieldName = null;
+            while (reader.hasNext()) {
+                JsonToken token = reader.peek();
+
+                if (token.equals(JsonToken.NAME)) {
+                    //get the current token
+                    fieldName = reader.nextName();
+                }
+
+                if ("secOfEpoch".equals(fieldName)) {
+                    secOfEpoch = reader.nextLong();
+                }
+
+                if("nanoSec".equals(fieldName)) {
+                    nanoSec = reader.nextInt();
+                }
+            }
+            reader.endObject();
+            return LocalDateTime.ofEpochSecond(secOfEpoch,nanoSec,ZoneOffset.ofHours(0));
+        }
+
+        @Override
+        public void write(JsonWriter writer, LocalDateTime time) throws IOException {
+            writer.beginObject();
+            writer.name("secOfEpoch");
+            writer.value(time.toEpochSecond(ZoneOffset.ofHours(0)));
+            writer.name("nanoSec");
+            writer.value(time.getNano());
+            writer.endObject();
+        }
+    }
+
     public static void write(AbstractTaskList tasks, OutputStream out) {
-        try {
-            DataOutputStream dataOut = new DataOutputStream(out);
+        try (DataOutputStream dataOut = new DataOutputStream(out)){
             dataOut.writeInt(tasks.numOfElem);
             for(Task task:tasks) {
                 // Writing data of task
@@ -39,8 +81,6 @@ public class TaskIO {
                     dataOut.writeInt(startTimeNano);
                 }
             }
-            // Closing binary file object
-            dataOut.close();
             System.out.println("write successful");
           } catch (IOException e) {
             e.printStackTrace();
@@ -48,8 +88,7 @@ public class TaskIO {
     }
 
     public static void read(AbstractTaskList tasks, InputStream in){
-        try {
-            DataInputStream dataIn = new DataInputStream(in);
+        try (DataInputStream dataIn = new DataInputStream(in)){
             int numOfElem = dataIn.readInt();
             for (int i=0;i<numOfElem;i++){
                 dataIn.readInt();
@@ -57,20 +96,17 @@ public class TaskIO {
                 newTask.setTitle(dataIn.readUTF());
                 newTask.setActive(dataIn.readBoolean());
                 int repeatInterval = dataIn.readInt();
+                long startTime = dataIn.readLong();
+                int startTimeNano = dataIn.readInt();
                 if (repeatInterval == 0){
-                    long startTime = dataIn.readLong();
-                    int startTimeNano = dataIn.readInt();
                     newTask.setTime(LocalDateTime.ofEpochSecond(startTime,startTimeNano,ZoneOffset.ofHours(0)));
                 }else{
-                    long startTime = dataIn.readLong();
-                    int startTimeNano = dataIn.readInt();
                     long endTime = dataIn.readLong();
                     int endTimeNano = dataIn.readInt();
                     newTask.setTime(LocalDateTime.ofEpochSecond(startTime,startTimeNano,ZoneOffset.ofHours(0)),LocalDateTime.ofEpochSecond(endTime,endTimeNano,ZoneOffset.ofHours(0)),repeatInterval);
                 }
                 tasks.add(newTask);
             }
-                dataIn.close();
                 System.out.println("read successful");
                 System.out.println(tasks);
             } catch (IOException e) {
@@ -101,19 +137,53 @@ public class TaskIO {
     }
 
     public static void write(AbstractTaskList tasks, Writer out){
-        Gson gson = new Gson();
-        gson.toJson(tasks,out);
+        try{
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
+            Gson gson = builder.create();
+            out.write(gson.toJson(tasks.toArray()));
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void read(AbstractTaskList tasks, Reader in){
-        Gson gson = new Gson();
-        gson.fromJson(in, AbstractTaskList.class);
+        try(BufferedReader buffReader = new BufferedReader(in)){
+            StringBuilder strBuild = new StringBuilder();
+            strBuild.append(buffReader.readLine());
+            while ((buffReader.readLine()) != null) {
+                strBuild.append(buffReader.readLine());
+            }
+
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
+            Gson gson = builder.create();
+
+            Task[] taskArray = gson.fromJson(strBuild.toString(), Task[].class);
+
+            for (Task task:taskArray) {
+                tasks.add(task);
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+        }
     }
 
     public static void writeText(AbstractTaskList tasks, File file){
-        writeText(tasks,file);
+        try (FileOutputStream fOut = new FileOutputStream(file)){
+            write(tasks,fOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
     public static void readText(AbstractTaskList tasks, File file){
-        readText(tasks,file);
+        try (FileInputStream fIn = new FileInputStream(file)){
+            read(tasks,fIn);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
  }

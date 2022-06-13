@@ -15,6 +15,8 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable, Ser
     public abstract int size();
     public abstract Task getTask(int index) throws IndexOutOfBoundsException;
 
+    public abstract Task[] toArray();
+
     public abstract Stream<Task> getStream();
 
     @Override
