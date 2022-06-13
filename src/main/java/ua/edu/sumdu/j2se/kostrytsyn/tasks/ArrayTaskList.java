@@ -1,6 +1,8 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * Class create array of tasks and methods to work with them.
@@ -9,8 +11,79 @@ import java.util.Arrays;
  * @version 0.1
  */
 public class ArrayTaskList extends AbstractTaskList {
-    /** Create array of tasks. */
+    /**
+     * Create array of tasks.
+     */
     private Task[] arrayTask = new Task[0];
+
+    private static class ArrayTaskListIterator implements Iterator<Task> {
+        public ArrayTaskList current;
+        public int currentIndex;
+        Task data;
+
+        // initialize pointer to head of the list for iteration
+        public ArrayTaskListIterator(ArrayTaskList list) {
+            current = list;
+            currentIndex = 0;
+        }
+
+        // returns false if next element does not exist
+        public boolean hasNext() {
+            return currentIndex < current.size();
+        }
+
+        // return current data and update pointer
+        public Task next() {
+            data = current.getTask(currentIndex);
+            currentIndex++;
+            return data;
+        }
+
+        // implement if needed
+        public void remove () throws IllegalStateException
+        {
+            if (current == null || data == null) {
+                throw new IllegalStateException();
+            }
+            current.remove(data);
+            currentIndex--;
+        }
+    }
+
+    //for iterable interface
+    public Iterator<Task> iterator() {
+        return new ArrayTaskListIterator(this);
+    }
+
+    @Override
+    public Stream<Task> getStream(){
+        return Arrays.stream(arrayTask);
+    }
+
+    @Override
+    public int hashCode(){
+        return super.hashCode();
+    }
+
+    @Override
+    public ArrayTaskList clone() throws CloneNotSupportedException {
+        ArrayTaskList TaskList = (ArrayTaskList) super.clone();
+
+        for(Iterator<Task> currIter = TaskList.iterator();currIter.hasNext();  )
+        {
+            currIter.next();
+            currIter.remove();
+        }
+
+        for (Task currentTask :
+                this) {
+            if (currentTask == null) {
+                continue;
+            }
+            TaskList.add((Task) currentTask.clone());
+        }
+        return TaskList;
+    }
 
     /**
      * Add task to array {@link ArrayTaskList}.
@@ -29,7 +102,8 @@ public class ArrayTaskList extends AbstractTaskList {
         }
         arrayTask[numOfElem] = task;
         numOfElem++;
-        System.out.println("Elements after add -- "+Arrays.toString(arrayTask));
+        updateHashSum();
+        System.out.println("Elements after add -- "+this);
     }
 
     /**
@@ -54,7 +128,9 @@ public class ArrayTaskList extends AbstractTaskList {
             }
             if (indexElementToBeDeleted >= 0) {
                 arrayTask = removeElement(arrayTask,indexElementToBeDeleted);
+                //arrayTask[indexElementToBeDeleted] = null;
                 numOfElem--;
+                updateHashSum();
                 return true;
             }
         }
@@ -93,8 +169,8 @@ public class ArrayTaskList extends AbstractTaskList {
         int remainingElements = arr.length - ( index + 1 );
         System.arraycopy(arr, 0, arrDestination, 0, index);
         System.arraycopy(arr, index + 1, arrDestination, index, remainingElements);
-        System.out.println("Elements after remove -- "  + Arrays.toString(arrDestination));
         return arrDestination;
     }
+
 }
 

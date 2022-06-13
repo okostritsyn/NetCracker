@@ -1,5 +1,8 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
+import java.util.Iterator;
+import java.util.List;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -27,20 +30,44 @@ public class Main {
 		boolean status = TaskArr.remove(task1);
   	System.out.println("Remove element status " + status + " new size:" + TaskArr.size() + " quantity " + TaskArr.numOfElem);
 
-		Task currentTask = TaskArr.getTask(0);
-		System.out.println("First element is "+currentTask.getTitle());
-
 		System.out.println("All elements are " +TaskArr);
 
-		AbstractTaskList TaskArrIncoming = TaskArr.incoming(10, 15);
+		List<Task> TaskArrIncoming = TaskArr.incoming(10, 15);
 		System.out.println("Found " + TaskArrIncoming.size() + " elements from " + 10 + " to " + 15);
 
 		for (int i = 0; i < TaskArrIncoming.size(); i++) {
-			Task currTask = TaskArrIncoming.getTask(i);
+			Task currTask = TaskArrIncoming.get(i);
 			if (currTask == null) {
 				continue;
 			}
 			System.out.println(currTask.getTitle());
 		}
+
+		AbstractTaskList TaskArrSecond = TaskListFactory.createTaskList(ListTypes.types.LINKED);
+
+		TaskArrSecond.add(task1);
+		TaskArrSecond.add(task2);
+		TaskArrSecond.add(task3);
+		TaskArrSecond.add(task4);
+		System.out.println(TaskArrSecond.size());
+
+		for (Task currTask2:
+			 TaskArrSecond) {
+			if (currTask2 == null) {
+				continue;
+			}
+			System.out.println(currTask2.getTitle());
+		}
+
+		for(Iterator<Task> currTask2 = TaskArrSecond.iterator();currTask2.hasNext();  )
+		{
+			Task data = currTask2.next();
+			if (data == null) {
+				continue;
+			}
+			System.out.println(data.getTitle());
+		}
+
+		System.out.println("hash code "+TaskArrSecond.hashCode());
 	}
 }

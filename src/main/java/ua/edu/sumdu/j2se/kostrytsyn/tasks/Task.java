@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @version 0.1
  */
-public class Task {
+public class Task implements Cloneable {
     /** Some information about task. */
     private String title;
     /** Interval in hours to repeat the task.*/
@@ -70,6 +70,29 @@ public class Task {
         setTitle(titleTask);
         setTime(start, end, intervalTime);
         setActive(false);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return interval == task.interval && active == task.active && repeated == task.repeated && startTime == task.startTime && endTime == task.endTime && Objects.equals(title, task.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, interval, active, repeated, startTime, endTime);
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 
     /**
