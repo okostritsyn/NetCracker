@@ -8,14 +8,13 @@ import java.lang.StringBuilder;
  *
  * @version 0.1
  */
-public class LinkedTaskList {
+public class LinkedTaskList extends AbstractTaskList {
     private Node head;
     /** quantity task in the array  */
-    public int numOfElem;
 
     private static class Node{
-        public Task data;
-        public Node next;
+        private final Task data;
+        private Node next;
 
         public Node(Task data) {
             this.data = data;
@@ -109,6 +108,7 @@ public class LinkedTaskList {
     /**
      * Get task from array on index{@link ArrayTaskList}.
      * @param index - Index of the task in array
+     * @return Task - object of Task
      */
     public Task getTask(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size()){
@@ -128,29 +128,5 @@ public class LinkedTaskList {
             }
             return currNode.data;
         }
-    }
-
-    /**
-     * Get array of tasks which can be done in interval from array {@link ArrayTaskList}.
-     * @param from - interval in hours
-     * @param to - interval in hours
-     */
-    public LinkedTaskList incoming(int from, int to){
-
-        LinkedTaskList taskArr = new LinkedTaskList();
-
-        if (from > to) {
-            return taskArr;
-        }
-        Node currNode = head;
-        do {
-            Task currentTask = currNode.data;
-            int nextTime = currentTask.nextTimeAfter(from);
-            if (from <= nextTime&&nextTime <= to) {
-                taskArr.add(currentTask);
-            }
-            currNode = currNode.next;
-        } while (currNode != null);
-        return taskArr;
     }
 }
