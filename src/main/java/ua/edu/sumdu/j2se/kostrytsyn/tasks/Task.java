@@ -1,8 +1,8 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
-import java.time.ZoneOffset;
-import java.util.Objects;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Class create tasks which can be set on a time.
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  *
  * @version 0.1
  */
-public class Task implements Cloneable {
+public class Task implements Cloneable, Serializable {
     /** Some information about task. */
     private String title;
     /** Interval in seconds to repeat the task.*/
@@ -20,16 +20,9 @@ public class Task implements Cloneable {
     /** if true the task can be repeated every <b>interval</b>. */
     private boolean repeated;
     /** Start time of the task in seconds from the beginning of an epoch.*/
-    private long startTime;
+    private LocalDateTime startTime;
     /** End time of the task in seconds from the beginning of an epoch.*/
-    private long endTime;
-    /** Nano seconds of start time*/
-    private int startTimeNano;
-    /** Nano seconds of end time*/
-    private int endTimeNano;
-
-    /** default zoneOffset */
-    public static final ZoneOffset zoneOffset = ZoneOffset.ofHours(3);
+    private LocalDateTime endTime;
 
     /**
      * Constructor - create new object without repeatable.
@@ -85,7 +78,7 @@ public class Task implements Cloneable {
         if (this == o) return true;
         if (!(o instanceof Task)) return false;
         Task task = (Task) o;
-        return interval == task.interval && active == task.active && repeated == task.repeated && startTime == task.startTime && endTime == task.endTime && endTimeNano == task.endTimeNano && startTimeNano == task.startTimeNano && Objects.equals(title, task.title);
+        return interval == task.interval && active == task.active && repeated == task.repeated && startTime.isEqual(task.startTime) && endTime.isEqual(task.endTime) && Objects.equals(title, task.title);
     }
 
     @Override
@@ -159,10 +152,8 @@ public class Task implements Cloneable {
             setTime(start, start, 0);
             return;
         } else {
-            this.startTimeNano = start.getNano();
-            this.startTime = start.toEpochSecond(zoneOffset);
-            this.endTimeNano = end.getNano();
-            this.endTime = end.toEpochSecond(zoneOffset);
+            this.startTime = start;
+            this.endTime = end;
             this.interval = intervalTime;
         }
         if (intervalTime != 0) {
@@ -187,7 +178,7 @@ public class Task implements Cloneable {
      * @return time of the task in hours from the beginning of a day
      */
     public LocalDateTime getTime() {
-        return LocalDateTime.ofEpochSecond(startTime,startTimeNano,zoneOffset);
+        return startTime;
     }
 
     /**
@@ -195,7 +186,7 @@ public class Task implements Cloneable {
      * @return return time of the task in hours from the beginning of a day
      */
     public LocalDateTime getStartTime() {
-        return LocalDateTime.ofEpochSecond(startTime,startTimeNano,zoneOffset);
+        return startTime;
     }
 
     /**
@@ -203,7 +194,7 @@ public class Task implements Cloneable {
      * @return return time of the task in hours from the beginning of a day
      */
     public LocalDateTime getEndTime() {
-        return LocalDateTime.ofEpochSecond(endTime,endTimeNano,zoneOffset);
+        return endTime;
     }
 
     /**
@@ -239,13 +230,13 @@ public class Task implements Cloneable {
          if (!isActive()) {
              return null;
         }
-        LocalDateTime endTimeDate = LocalDateTime.ofEpochSecond(endTime,endTimeNano,zoneOffset);
+        LocalDateTime endTimeDate = endTime;
 
         if (current.isAfter(endTimeDate) || current.isEqual(endTimeDate)){
             return null; //task already complete
         }
 
-        LocalDateTime i = LocalDateTime.ofEpochSecond(startTime,startTimeNano,zoneOffset);
+        LocalDateTime i = startTime;
         do {
             if (current.isBefore(i)) {
                 break;

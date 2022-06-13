@@ -1,11 +1,12 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
+import java.io.Serializable;
 import java.lang.StringBuilder;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
+public abstract class AbstractTaskList implements Iterable<Task>, Cloneable, Serializable {
     public int numOfElem;
     private int hashOfList;
 
