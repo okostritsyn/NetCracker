@@ -28,8 +28,9 @@ public class Main {
 		TaskArr.add(task2);
 		TaskArr.add(task3);
 		TaskArr.add(task4);
+
 		boolean status = TaskArr.remove(task1);
-		System.out.println("Remove element status " + status + " new size:" + TaskArr.size() + " quantity " + TaskArr.numOfElem);
+  	System.out.println("Remove element status " + status + " new size:" + TaskArr.size() + " quantity " + TaskArr.numOfElem);
 
 		System.out.println("All elements are " +TaskArr);
 

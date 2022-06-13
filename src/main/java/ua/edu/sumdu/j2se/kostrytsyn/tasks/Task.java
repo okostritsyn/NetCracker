@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
 /**
  * Class create tasks which can be set on a time.
  * @author Kostrytsyn Oleg
@@ -116,6 +117,7 @@ public class Task implements Cloneable, Serializable {
         if (time == null) {
             throw new IllegalArgumentException("Start time is not set!");
         }
+
 
         if (isRepeated()) {
             setRepeated(false);
@@ -252,3 +254,4 @@ public class Task implements Cloneable, Serializable {
         }
     }
 }
+
