@@ -146,7 +146,6 @@ public class TaskIO {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void read(AbstractTaskList tasks, Reader in){
@@ -172,7 +171,7 @@ public class TaskIO {
     }
 
     public static void writeText(AbstractTaskList tasks, File file){
-        try (FileOutputStream fOut = new FileOutputStream(file)){
+        try (Writer fOut = new BufferedWriter(new FileWriter(file))){
             write(tasks,fOut);
         } catch (IOException e) {
             e.printStackTrace();
@@ -180,7 +179,7 @@ public class TaskIO {
     }
 
     public static void readText(AbstractTaskList tasks, File file){
-        try (FileInputStream fIn = new FileInputStream(file)){
+        try (Reader fIn = new BufferedReader(new FileReader(file))){
             read(tasks,fIn);
         } catch (IOException e) {
             e.printStackTrace();
