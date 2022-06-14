@@ -81,7 +81,6 @@ public class TaskIO {
                     dataOut.writeInt(startTimeNano);
                 }
             }
-            System.out.println("write successful");
           } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,8 +106,6 @@ public class TaskIO {
                 }
                 tasks.add(newTask);
             }
-                System.out.println("read successful");
-                System.out.println(tasks);
             } catch (IOException e) {
                 e.printStackTrace();
             }
