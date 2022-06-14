@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -9,34 +11,29 @@ import java.util.Objects;
  *
  * @version 0.1
  */
-public class Task implements Cloneable {
+public class Task implements Cloneable, Serializable {
     /** Some information about task. */
     private String title;
-    /** Interval in hours to repeat the task.*/
+    /** Interval in seconds to repeat the task.*/
     private int interval;
     /** mark of activity. */
     private boolean active;
     /** if true the task can be repeated every <b>interval</b>. */
     private boolean repeated;
-    /** Start time of the task in hours from the beginning of a day.
-     * As example  22 means 22.00
-     */
-    private int startTime;
-    /** End time of the task in hours from the beginning of a day.
-     * As example  22 means 22.00
-     */
-    private int endTime;
+    /** Start time of the task in seconds from the beginning of an epoch.*/
+    private LocalDateTime startTime;
+    /** End time of the task in seconds from the beginning of an epoch.*/
+    private LocalDateTime endTime;
 
     /**
      * Constructor - create new object without repeatable.
      * @param titleTask - Name of the task
-     * @param time - Time of the task, hours from the beginning of a day
-     * @see Task#Task(String,int)
+     * @param time - Time of the task,LocalDateTime
+     * @see Task#Task(String,LocalDateTime)
      */
-
-    public Task(final String titleTask, final int time) throws IllegalArgumentException {
-        if (time < 0) {
-            throw new IllegalArgumentException("Start time must not be negative!");
+    public Task(final String titleTask, final LocalDateTime time) throws IllegalArgumentException {
+        if (time == null) {
+            throw new IllegalArgumentException("Start time is not set!");
         }
         setTitle(titleTask);
         setTime(time);
@@ -46,25 +43,25 @@ public class Task implements Cloneable {
     /**
      * Constructor - create new object without repeatable.
      * @param titleTask - Name of the task
-     * @param start - Start time of the task, hours from the beginning of a day
-     * @param end - End time of the task, hours from the beginning of a day
-     * @param intervalTime - Interval of repeating, hours
-     * @see Task#Task(String,int,int,int)
+     * @param start - Start time of the task
+     * @param end - End time of the task
+     * @param intervalTime - Interval of repeating, seconds
+     * @see Task#Task(String,LocalDateTime,LocalDateTime,int)
      */
     public Task(final String titleTask,
-                final int start,
-                final int end,
+                final LocalDateTime start,
+                final LocalDateTime end,
                 final int intervalTime) throws IllegalArgumentException  {
-        if (start < 0) {
-            throw new IllegalArgumentException("Start time must not be negative!");
+        if (start == null) {
+            throw new IllegalArgumentException("Start time is not set!");
         }
-        else if (end < 0) {
-            throw new IllegalArgumentException("End time must not be negative!");
+        else if (end == null) {
+            throw new IllegalArgumentException("End time must is not set!");
         }
         else if (intervalTime < 0) {
             throw new IllegalArgumentException("Interval time must not be negative");
         }
-        else if (intervalTime == 0 && start != end) {
+        else if (intervalTime == 0 && start.isBefore(end)) {
             throw new IllegalArgumentException("Interval time must be bigger than 0!");
         }
         setTitle(titleTask);
@@ -82,7 +79,7 @@ public class Task implements Cloneable {
         if (this == o) return true;
         if (!(o instanceof Task)) return false;
         Task task = (Task) o;
-        return interval == task.interval && active == task.active && repeated == task.repeated && startTime == task.startTime && endTime == task.endTime && Objects.equals(title, task.title);
+        return interval == task.interval && active == task.active && repeated == task.repeated && startTime.isEqual(task.startTime) && endTime.isEqual(task.endTime) && Objects.equals(title, task.title);
     }
 
     @Override
@@ -114,11 +111,11 @@ public class Task implements Cloneable {
     /**
      * Setter for start time of the non repeatable task.
      * If task is repeatable it becomes non repeatable
-     * @param time - in hours from the beginning of a day
+     * @param time - LocalDateTime
      */
-   public void setTime(final int time) throws IllegalArgumentException {
-        if (time < 0) {
-            throw new IllegalArgumentException("Start time must not be negative!");
+    public void setTime(final LocalDateTime time) throws IllegalArgumentException {
+        if (time == null) {
+            throw new IllegalArgumentException("Start time is not set!");
         }
 
 
@@ -131,27 +128,27 @@ public class Task implements Cloneable {
 
     /**
      * Setter for start time of the repeatable task.
-     * @param start - in hours from the beginning of a day
-     * @param end - in hours from the beginning of a day
-     * @param intervalTime - in hours from the beginning of a day
+     * @param start - LocalDateTime
+     * @param end - LocalDateTime
+     * @param intervalTime - in seconds from the beginning of a day
      */
-    public void setTime(final int start,
-                        final int end,
+    public void setTime(final LocalDateTime start,
+                        final LocalDateTime end,
                         final int intervalTime) throws IllegalArgumentException {
-        if (start < 0) {
-            throw new IllegalArgumentException("Start time must not be negative!");
+        if (start == null) {
+            throw new IllegalArgumentException("Start time is not set!");
         }
-        else if (end < 0) {
-            throw new IllegalArgumentException("End time must not be negative!");
+        else if (end == null) {
+            throw new IllegalArgumentException("End time is not set!");
         }
         else if (intervalTime < 0) {
             throw new IllegalArgumentException("Interval time must not be negative");
         }
-        else if (intervalTime == 0 && start != end) {
+        else if (intervalTime == 0 && start.isBefore(end)) {
             throw new IllegalArgumentException("Interval time must be bigger than 0!");
         }
 
-        if (start > end) {
+        if (start.isAfter(end)) {
             System.out.println("End time must be bigger or equal of start time."
                     + "Task will be not repeatable!");
             setTime(start, start, 0);
@@ -182,7 +179,7 @@ public class Task implements Cloneable {
      * Get time of next start of the repeatable task.
      * @return time of the task in hours from the beginning of a day
      */
-    public int getTime() {
+    public LocalDateTime getTime() {
         return startTime;
     }
 
@@ -190,7 +187,7 @@ public class Task implements Cloneable {
      * Get start time of the repeatable task.
      * @return return time of the task in hours from the beginning of a day
      */
-    public int getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
@@ -198,7 +195,7 @@ public class Task implements Cloneable {
      * Get end time of the repeatable task.
      * @return return time of the task in hours from the beginning of a day
      */
-    public int getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
@@ -228,29 +225,30 @@ public class Task implements Cloneable {
 
     /**
      * Calculate next time start for the task.
-     * @param current current time in hours
-     * @return -1 if error, hours if ok
+     * @param current current time
+     * @return null if error, LocalDateTime if ok
      */
-    public int nextTimeAfter(final int current) {
-        if (!isActive()) {
-            return -1;
+    public LocalDateTime nextTimeAfter(final LocalDateTime current) {
+         if (!isActive()) {
+             return null;
         }
-        if (current >= this.endTime) {
-            return -1; //task already complete
+        LocalDateTime endTimeDate = endTime;
+
+        if (current.isAfter(endTimeDate) || current.isEqual(endTimeDate)){
+            return null; //task already complete
         }
 
-        int i = startTime;
-
+        LocalDateTime i = startTime;
         do {
-            if (current < i) {
+            if (current.isBefore(i)) {
                 break;
             }
-            i = i + interval;
+            i = i.plusSeconds(interval);
         }
-        while (i <= endTime);
+        while (i.isBefore(endTimeDate)||i.isEqual(endTimeDate));
 
-        if (i > endTime) {
-            return -1; //if i + interval = endTime than return error
+        if (i.isAfter(endTimeDate)) {
+            return null; //if i + interval = endTime than return error
         } else {
             return i;
         }

@@ -99,6 +99,17 @@ public class LinkedTaskList extends AbstractTaskList {
         return TaskList;
     }
 
+    public Task[] toArray(){
+        Task[] arrayTask = new Task[numOfElem];
+        int i = 0;
+        for (Task task:this
+             ) {
+            arrayTask[i] = task;
+            i++;
+        }
+        return arrayTask;
+    }
+
     /**
      * Add task to array {@link ArrayTaskList}.
      * Increase size of array if needed
