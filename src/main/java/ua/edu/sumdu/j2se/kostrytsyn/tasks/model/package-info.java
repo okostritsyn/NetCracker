@@ -4,4 +4,4 @@
  * @author NetCracker
  * @version 1.1
  */
-package ua.edu.sumdu.j2se.kostrytsyn.tasks;
+package ua.edu.sumdu.j2se.kostrytsyn.tasks.model;

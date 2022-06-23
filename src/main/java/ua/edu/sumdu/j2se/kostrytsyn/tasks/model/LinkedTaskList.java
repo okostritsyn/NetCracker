@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.kostrytsyn.tasks;
+package ua.edu.sumdu.j2se.kostrytsyn.tasks.model;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
