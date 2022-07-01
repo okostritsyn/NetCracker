@@ -1,31 +1,30 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.*;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.SetCatalogView;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.SetTypeView;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainController extends Controller {
+public class SettingsMenuController extends Controller{
     private AbstractTaskList taskList;
     private List<Controller> controllers = new ArrayList<>();
 
-    public MainController(AbstractTaskList taskList, View mainView){
-        super(mainView,Controller.MAIN_MENU_ACTION);
+    public SettingsMenuController(AbstractTaskList taskList, View mainView){
+        super(mainView,Controller.SETTINGS_ACTION);
         this.taskList = taskList;
         controllers.add(this);
-        controllers.add(new AddTaskController(new AddTaskView(),Controller.ADD_TASK_ACTION));
-        controllers.add(new SetPeriodController(new SetPeriodView(),Controller.SET_PERIOD_ACTION));
-
-        controllers.add(new ChangeMenuController(taskList,new ChangeMenuView()));
-        controllers.add(new SettingsMenuController(taskList,new SettingsMenuView()));
+        controllers.add(new SetCatalogController(new SetCatalogView(),Controller.SET_CATALOG_ACTION));
+        controllers.add(new SetTypeController(new SetTypeView(),Controller.SET_TYPE_ACTION));
     }
 
     @Override
     public int process(AbstractTaskList taskList) {
         int action = view.printInfo(taskList);
         if (controllers.size() == 0){
-            action = FINISH_ACTION;
+            action = MAIN_MENU_ACTION;
         }
         do {
             for (Controller controller : controllers) {
@@ -33,7 +32,7 @@ public class MainController extends Controller {
                     action = controller.process(this.taskList);
                 }
             }
-        } while (action != FINISH_ACTION);
-        return FINISH_ACTION;
+        } while (action != MAIN_MENU_ACTION);
+        return MAIN_MENU_ACTION;
     }
 }

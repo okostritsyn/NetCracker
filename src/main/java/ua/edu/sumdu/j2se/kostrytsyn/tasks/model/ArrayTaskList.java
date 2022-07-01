@@ -127,6 +127,7 @@ public class ArrayTaskList extends AbstractTaskList {
                     continue;
                 }else if (currentTask.equals(task)) {
                     indexElementToBeDeleted  = i;
+                    break;
                 }
                 i++;
             }

@@ -11,7 +11,7 @@ public class Main {
 		AbstractTaskList taskList = TaskListFactory.createTaskList(ListTypes.types.LINKED);
 		View mainView = new MainView();
 		Controller mainController = new MainController(taskList,mainView);
-		mainController.process(null);
+		mainController.process(taskList);
 		System.out.println("Good bye!");
 	}
 }
