@@ -21,8 +21,8 @@ public class MainView implements View {
         System.out.println("5. Exit");
         System.out.println("List of tasks: current period - ");
 
-        if (taskList == null){
-            System.out.println("<empty>");
+        if (taskList == null || taskList.size() == 0 ) {
+            System.out.println("<List of tasks is empty>");
         }else {
             int i = 0;
             for (Task task : taskList) {

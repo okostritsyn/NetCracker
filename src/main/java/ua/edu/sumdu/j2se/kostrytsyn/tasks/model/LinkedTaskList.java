@@ -134,7 +134,6 @@ public class LinkedTaskList extends AbstractTaskList {
         }
         numOfElem++;
         updateHashSum();
-        System.out.println("Elements after add -- "+ this);
     }
 
     /**
@@ -165,7 +164,6 @@ public class LinkedTaskList extends AbstractTaskList {
             if (elementHasFound){
                 numOfElem--;
                 updateHashSum();
-                System.out.println("Elements after remove -- "  + this);
                 return true;
             }
         }

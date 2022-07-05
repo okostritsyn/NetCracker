@@ -1,7 +1,7 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.SetCatalogView;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.SaveTasksToFileView;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.SetTypeView;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
@@ -16,7 +16,7 @@ public class SettingsMenuController extends Controller{
         super(mainView,Controller.SETTINGS_ACTION);
         this.taskList = taskList;
         controllers.add(this);
-        controllers.add(new SetCatalogController(new SetCatalogView(),Controller.SET_CATALOG_ACTION));
+        controllers.add(new SaveTasksToFileController(new SaveTasksToFileView(),Controller.SET_CATALOG_ACTION));
         controllers.add(new SetTypeController(new SetTypeView(),Controller.SET_TYPE_ACTION));
     }
 

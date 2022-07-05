@@ -15,7 +15,7 @@ public class SettingsMenuView implements View {
         clearScreen();
 
         System.out.println("Make a choice:");
-        System.out.println("1. Change catalog");
+        System.out.println("1. Save tasks to file");
         System.out.println("2. Set type of list");
         System.out.println("3. Return");
 
