@@ -3,26 +3,22 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.view;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.Controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 public class SettingsMenuView implements View {
-    private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
     @Override
-    public int printInfo(AbstractTaskList taskList) {
+    public void printInfo(AbstractTaskList taskList) {
         clearScreen();
-
         System.out.println("Make a choice:");
         System.out.println("1. Save tasks to file");
         System.out.println("2. Set type of list");
         System.out.println("3. Return");
+    }
 
+    @Override
+    public int readAction() {
         int variant = 0;
         try{
-            variant = Integer.parseInt(reader.readLine());
-        } catch (IOException e) {
+            variant = Integer.parseInt(readInputString());
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
         return variant==3 ? Controller.MAIN_MENU_ACTION : variant+Controller.SHIFT_MENU_SETTINGS;

@@ -30,5 +30,7 @@ public abstract class Controller {
 
     public boolean canProcess(int action){return this.action == action;}
 
-    public int process(AbstractTaskList taskList){return view.printInfo(taskList);}
+    public int process(AbstractTaskList taskList){
+        view.printInfo(taskList);
+        return view.readAction();}
 }

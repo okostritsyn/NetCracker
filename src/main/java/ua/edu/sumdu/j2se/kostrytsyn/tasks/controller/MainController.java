@@ -23,7 +23,8 @@ public class MainController extends Controller {
 
     @Override
     public int process(AbstractTaskList taskList) {
-        int action = view.printInfo(taskList);
+        view.printInfo(taskList);
+        int action = view.readAction();
         if (controllers.size() == 0){
             action = FINISH_ACTION;
         }

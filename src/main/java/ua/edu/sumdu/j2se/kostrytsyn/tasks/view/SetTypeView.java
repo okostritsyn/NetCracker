@@ -5,9 +5,12 @@ import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
 public class SetTypeView implements View {
     @Override
-    public int printInfo(AbstractTaskList taskList) {
+    public void printInfo(AbstractTaskList taskList) {
         System.out.println("type was set");
-        return Controller.SETTINGS_ACTION;
     }
 
+    @Override
+    public int readAction() {
+        return Controller.SETTINGS_ACTION;
+    }
 }

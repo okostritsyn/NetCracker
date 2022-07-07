@@ -5,8 +5,12 @@ import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
 public class ViewTaskView implements View {
     @Override
-    public int printInfo(AbstractTaskList taskList) {
+    public void printInfo(AbstractTaskList taskList) {
         System.out.println("View task");
-        return Controller.CHANGE_MENU_ACTION;
+    }
+
+    @Override
+    public int readAction() {
+        return Controller.SETTINGS_ACTION;
     }
 }

@@ -22,7 +22,8 @@ public class SettingsMenuController extends Controller{
 
     @Override
     public int process(AbstractTaskList taskList) {
-        int action = view.printInfo(taskList);
+        view.printInfo(taskList);
+        int action = view.readAction();
         if (controllers.size() == 0){
             action = MAIN_MENU_ACTION;
         }
