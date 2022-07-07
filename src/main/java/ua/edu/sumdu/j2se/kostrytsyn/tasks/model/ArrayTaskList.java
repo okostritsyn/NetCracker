@@ -119,21 +119,22 @@ public class ArrayTaskList extends AbstractTaskList {
         if (arrayTask == null) {
             return false;
         } else {
-            int indexElementToBeDeleted  = -1;
+            boolean elementToDeleteFound  = false;
             int i = 0;
             for (Task currentTask:
                     arrayTask) {
                 if (currentTask == null){
                     continue;
-                }else if (currentTask.equals(task)) {
-                    indexElementToBeDeleted  = i;
-                    break;
+                }else if (currentTask == task || currentTask.equals(task)) {
+                    arrayTask[i] = null;
+                    elementToDeleteFound = true;
                 }
                 i++;
             }
-            if (indexElementToBeDeleted >= 0) {
-                arrayTask = removeElement(arrayTask,indexElementToBeDeleted);
-                //arrayTask[indexElementToBeDeleted] = null;
+            arrayTask = removeNullElements(arrayTask);
+
+            if (elementToDeleteFound) {
+                arrayTask = removeNullElements(arrayTask);
                 numOfElem--;
                 updateHashSum();
                 return true;
@@ -169,12 +170,31 @@ public class ArrayTaskList extends AbstractTaskList {
         }
     }
 
-    private Task[] removeElement(Task[] arr, int index ){
-        Task[] arrDestination = new Task[arr.length - 1];
-        int remainingElements = arr.length - ( index + 1 );
-        System.arraycopy(arr, 0, arrDestination, 0, index);
-        System.arraycopy(arr, index + 1, arrDestination, index, remainingElements);
-        return arrDestination;
+    private Task[] removeNullElements(Task[] arr){
+        Arrays.sort(arr, (o1, o2) -> {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
+            if (o1 == null) {
+                return 1;
+            }
+            if (o2 == null) {
+                return -1;
+            }
+            return 0;
+        });
+
+        int indexBeforeNull = -1;
+        for (Task currTask: arr) {
+            indexBeforeNull++;
+            if (currTask == null) break;
+        }
+        if (indexBeforeNull==-1) return arr;
+
+        Task[] arrDestination = new Task[indexBeforeNull];
+        System.arraycopy(arr, 0, arrDestination, 0, indexBeforeNull);
+
+         return arrDestination;
     }
 
 }

@@ -26,6 +26,11 @@ public class ChangeMenuView implements View {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return variant==4 ? Controller.MAIN_MENU_ACTION : variant  + Controller.SHIFT_MENU_TASK;
+        if (variant==4) {
+            return Controller.MAIN_MENU_ACTION;
+        }else if(variant < 1 || variant > 4){
+            return printInfo(taskList);
+        }
+        return variant  + Controller.SHIFT_MENU_TASK;
     }
 }

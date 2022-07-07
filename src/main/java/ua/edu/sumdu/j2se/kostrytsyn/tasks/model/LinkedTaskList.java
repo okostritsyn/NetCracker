@@ -148,7 +148,7 @@ public class LinkedTaskList extends AbstractTaskList {
             Node prevNode = null;
 
             do {
-                if(currNode.data == task){
+                if(currNode.data == task || currNode.data.equals(task)){
                     if(currNode == head){
                         head = currNode.next;
                     }else{
