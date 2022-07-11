@@ -11,6 +11,6 @@ public class ViewTaskView implements View {
 
     @Override
     public int readAction() {
-        return Controller.SETTINGS_ACTION;
+        return Controller.CHANGE_MENU_ACTION;
     }
 }

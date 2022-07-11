@@ -15,7 +15,7 @@ public interface View {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String data = "";
         try {
-            data = reader.readLine().trim();
+            data = reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }

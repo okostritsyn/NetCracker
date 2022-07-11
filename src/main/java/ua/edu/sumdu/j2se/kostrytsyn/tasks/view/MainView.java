@@ -13,12 +13,13 @@ public class MainView implements View {
         try{
             variant = Integer.parseInt(readInputString());
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            System.out.println("incorrect number!");
+            return readAction();
         }
         if (variant==5) {
             return Controller.FINISH_ACTION;
         }else if(variant < 1 || variant > 5){
-            printInfo(currTaskList);
+            System.out.println("incorrect number!");
             return readAction();
         }
         return variant;
