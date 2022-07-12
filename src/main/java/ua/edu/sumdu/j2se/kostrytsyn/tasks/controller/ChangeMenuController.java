@@ -14,18 +14,23 @@ public class ChangeMenuController extends Controller{
         super(mainView,Controller.CHANGE_MENU_ACTION);
         this.taskList = taskList;
         controllers.add(this);
+        controllers.add(new AddTaskController(new AddTaskView(),Controller.ADD_TASK_ACTION));
         controllers.add(new ChangeTaskController(new ChangeTaskView(),Controller.CHANGE_ACTION));
         controllers.add(new RemoveTaskController(new RemoveTaskView(),Controller.REMOVE_ACTION));
-        controllers.add(new ViewTaskController(new ViewTaskView(),Controller.VIEW_ACTION));
+        controllers.add(new SetPeriodController(new SetPeriodView(),Controller.SET_PERIOD_ACTION));
     }
 
     @Override
+    public boolean canProcess(int action){return this.action == action;}
+
+    @Override
     public int process(AbstractTaskList taskList) {
-        view.printInfo(taskList);
-        int action = view.readAction();
+        int action = super.process(taskList);
+
         if (controllers.size() == 0){
             action = MAIN_MENU_ACTION;
         }
+
         do {
             for (Controller controller : controllers) {
                 if (controller.canProcess(action)) {

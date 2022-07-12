@@ -7,24 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainController extends Controller {
-    private AbstractTaskList taskList;
-    private List<Controller> controllers = new ArrayList<>();
+    private final AbstractTaskList taskList;
+    private final List<Controller> controllers = new ArrayList<>();
 
     public MainController(AbstractTaskList taskList, View mainView){
         super(mainView,Controller.MAIN_MENU_ACTION);
         this.taskList = taskList;
         controllers.add(this);
-        controllers.add(new AddTaskController(new AddTaskView(),Controller.ADD_TASK_ACTION));
-        controllers.add(new SetPeriodController(new SetPeriodView(),Controller.SET_PERIOD_ACTION));
-
         controllers.add(new ChangeMenuController(taskList,new ChangeMenuView()));
         controllers.add(new SettingsMenuController(taskList,new SettingsMenuView()));
     }
 
     @Override
     public int process(AbstractTaskList taskList) {
-        view.printInfo(taskList);
-        int action = view.readAction();
+        int action = super.process(taskList);
+
         if (controllers.size() == 0){
             action = FINISH_ACTION;
         }

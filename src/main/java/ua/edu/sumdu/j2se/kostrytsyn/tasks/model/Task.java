@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 
@@ -154,9 +155,9 @@ public class Task implements Cloneable, Serializable {
             setTime(start, start, 0);
             return;
         } else {
-            this.startTime = start;
-            this.endTime = end;
-            this.interval = intervalTime;
+            setStartTime(start);
+            setEndTime(end);
+            setInterval(intervalTime);
         }
         if (intervalTime != 0) {
             setRepeated(true);
@@ -171,8 +172,20 @@ public class Task implements Cloneable, Serializable {
         return title;
     }
 
-    private void setRepeated(final boolean isRepeated) {
+    public void setRepeated(final boolean isRepeated) {
         this.repeated = isRepeated;
+    }
+
+    public void setStartTime(final LocalDateTime time) {
+        this.startTime = time;
+    }
+
+    public void setEndTime(final LocalDateTime time) {
+        this.endTime = time;
+    }
+
+    public void setInterval(final int interval) {
+        this.interval = interval;
     }
 
     /**
@@ -181,6 +194,14 @@ public class Task implements Cloneable, Serializable {
      */
     public LocalDateTime getTime() {
         return startTime;
+    }
+
+    public String getStartTimeStr() {
+        return startTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm"));
+    }
+
+    public String getEndTimeStr() {
+        return endTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm"));
     }
 
     /**

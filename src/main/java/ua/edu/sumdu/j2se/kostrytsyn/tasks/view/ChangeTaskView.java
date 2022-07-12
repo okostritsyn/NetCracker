@@ -1,16 +1,37 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.view;
 
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.Controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
 public class ChangeTaskView implements View {
+    int maxElement;
+
     @Override
     public int readAction() {
-        return Controller.CHANGE_MENU_ACTION;
+        int selectedElement;
+        try {
+            selectedElement = Integer.parseInt(readInputString());
+        } catch (NumberFormatException e) {
+            System.out.println("incorrect number! Make your choice:");
+            return readAction();
+        }
+
+        if (selectedElement < 0 || selectedElement > maxElement) {
+            System.out.println("incorrect number! Make your choice: ");
+            return readAction();
+        }
+
+        return selectedElement;
     }
 
     @Override
     public void printInfo(AbstractTaskList taskList) {
-        System.out.println("Task was change");
+        clearScreen();
+        maxElement = taskList.size();
+        printListOfTasks(taskList);
+
+        System.out.println("Enter number of task to change, 0 to return:");
+
     }
 }
+
+
