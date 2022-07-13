@@ -14,13 +14,15 @@ public class ChangeTaskController extends Controller{
     protected static boolean changeTask(View view,Task currTask) {
         TaskUtil.setTitleOfTask(view, currTask);
         TaskUtil.setStartTimeOfTask(view, currTask);
-        if (currTask.getEndTime().isEqual(LocalDateTime.MIN)){
+        if (currTask.getEndTime().isEqual(LocalDateTime.MAX)){
             currTask.setEndTime(currTask.getStartTime());
         }
         boolean isRepeated = currTask.isRepeated();
         if (isRepeated) {
             TaskUtil.setEndTimeOfTask(view, currTask);
             TaskUtil.setInterval(view, currTask);
+        } else { // on case changing unrepeatable task
+            currTask.setEndTime(currTask.getStartTime());
         }
 
         BackgroundJobManager jobManager = new BackgroundJobManager();

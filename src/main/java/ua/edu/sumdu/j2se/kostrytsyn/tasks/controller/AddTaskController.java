@@ -14,6 +14,8 @@ public class AddTaskController extends Controller{
     private Task getNewTask(int typeOfTask) {
         Task currTask = new Task("", LocalDateTime.now());
         currTask.setRepeated(typeOfTask == 1);
+        currTask.setEndTime(LocalDateTime.MAX);
+
         currTask.setActive(true);
         ChangeTaskController.changeTask(view,currTask);
         return currTask;
