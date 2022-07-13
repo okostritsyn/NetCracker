@@ -34,7 +34,12 @@ public class MainController extends Controller {
             }
         } while (action != FINISH_ACTION);
 
-        TaskUtil.saveTasksToFile(taskList);
+        IOUtil.saveTasksToFile(taskList);
+
+        for (RunTaskController currScheduler:Controller.RunTaskControllers()) {
+            if (currScheduler == null) continue;
+            currScheduler.getManager().shutdownNow();
+        }
 
         return FINISH_ACTION;
     }

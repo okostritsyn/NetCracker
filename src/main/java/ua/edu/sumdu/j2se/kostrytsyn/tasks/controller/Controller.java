@@ -37,9 +37,9 @@ public abstract class Controller {
     private static LocalDate periodEnd;
     private static ListTypes currentTypeList;
     private static AbstractTaskList taskList;
-    private static Notification notificationInTray;
 
-    private static ArrayList<RunTaskController> arrayOfTimers = new ArrayList<RunTaskController>();
+    private static Notification notificationInTray;
+    private static ArrayList<RunTaskController> runTasks;
 
     static {
         setPeriodStart(LocalDate.MIN);
@@ -52,8 +52,20 @@ public abstract class Controller {
         this.action = action;
     }
 
+    public static void setNotificationTray(Notification notificationInTray) {
+        Controller.notificationInTray = notificationInTray;
+    }
+
+    public static Notification getNotificationTray() {
+        return Controller.notificationInTray;
+    }
+
     public static void setPeriodStart(LocalDate period){
         Controller.periodStart =  period;
+    }
+
+    public static void addRunTaskController(RunTaskController runTask){
+        Controller.runTasks.add(runTask);
     }
 
     public static void setPeriodEnd(LocalDate period){
@@ -112,39 +124,23 @@ public abstract class Controller {
 
         Controller.setTaskList(TaskListFactory.createTaskList(Controller.getCurrentTypeList()));
 
-        File currFile = new File(path.toString(),"tasks_"+TaskUtil.getPostFixOfFile()+".json");
+        File currFile = new File(path.toString(),"tasks_"+ IOUtil.getPostFixOfFile()+".json");
         if (!currFile.exists()){
-            TaskUtil.saveTasksToFile(Controller.getTaskList());
+            IOUtil.saveTasksToFile(Controller.getTaskList());
         } else {
-            TaskUtil.readTasksFromCatalog(Controller.getTaskList(),path);
+            IOUtil.readTasksFromCatalog(Controller.getTaskList(),path);
         }
+        runTasks = new ArrayList<>(Controller.getTaskList().size()*2);
 
         for (Task currTask:
              Controller.getTaskList()) {
-            TaskUtil.setSchedulerForTask(currTask);
+            BackgroundJobManager jobManager = new BackgroundJobManager();
+            addRunTaskController(jobManager.init(currTask));
         }
     }
 
-    public static void setNotificationTray(Notification notificationInTray) {
-        Controller.notificationInTray = notificationInTray;
-    }
-
-    public static Notification getNotificationTray() {
-        return Controller.notificationInTray;
-    }
-
-    public static void addNewTimer(RunTaskController runTaskController) {
-        arrayOfTimers.add(runTaskController);
-    }
-
-    public static RunTaskController getTimerForTask(Task currTask) {
-        for (RunTaskController currTimer:
-                arrayOfTimers) {
-            if (currTimer.getCurrTask() == currTask) {
-                return currTimer;
-            };
-        }
-        return null;
+    protected static ArrayList<RunTaskController> RunTaskControllers() {
+        return runTasks;
     }
 
     public boolean canProcess(int action){return this.action == action;}

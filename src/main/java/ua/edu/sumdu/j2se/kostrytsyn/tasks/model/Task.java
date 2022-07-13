@@ -197,11 +197,11 @@ public class Task implements Cloneable, Serializable {
     }
 
     public String getStartTimeStr() {
-        return startTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm"));
+        return startTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
     }
 
     public String getEndTimeStr() {
-        return endTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm"));
+        return endTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
     }
 
     /**

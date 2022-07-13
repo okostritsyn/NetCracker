@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsMenuController extends Controller{
-    private AbstractTaskList taskList;
-    private List<Controller> controllers = new ArrayList<>();
+    private final AbstractTaskList taskList;
+    private final List<Controller> controllers = new ArrayList<>();
 
     public SettingsMenuController(AbstractTaskList taskList, View mainView){
         super(mainView,Controller.SETTINGS_ACTION);

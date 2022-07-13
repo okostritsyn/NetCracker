@@ -18,8 +18,9 @@ public class Main {
 		Controller mainController = new MainController(Controller.getTaskList(),mainView);
 		mainController.process(Controller.getTaskList());
 
-		System.out.println("Good bye!");
 		notificationInTray.closeTray();
+
+		System.out.println("Good bye!");
 
 	}
 }

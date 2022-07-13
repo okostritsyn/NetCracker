@@ -30,7 +30,7 @@ public class SaveTasksToFileController extends Controller{
                 System.out.println("Catalog does not exist!");
                 }
             }
-            TaskUtil.writeTasksToCatalog(taskList,path);
+            IOUtil.writeTasksToCatalog(taskList,path);
             System.out.println("File saved to catalog!");
         }
         return Controller.MAIN_MENU_ACTION;

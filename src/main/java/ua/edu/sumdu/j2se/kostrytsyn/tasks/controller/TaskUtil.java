@@ -1,25 +1,14 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.ListTypes;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.TaskIO;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 public class TaskUtil {
     public static void setTitleOfTask(View view, Task currTask){
@@ -142,81 +131,5 @@ public class TaskUtil {
         }
 
         currTask.setRepeated(currType == 1);
-    }
-
-    public static String getPostFixOfFile(){
-        return Controller.getCurrentTypeList().equals(ListTypes.LINKED)?"linked":"array";
-    }
-
-    public static void readTasksFromCatalog(AbstractTaskList taskList,Path path){
-        File newFile = new File(path.toString(),"tasks_"+getPostFixOfFile()+".json");
-        boolean fileExist = newFile.exists();
-        if (!fileExist) {
-            return;
-        }
-        TaskIO.readText(taskList,newFile);
-    }
-
-    public static void writeTasksToCatalog(AbstractTaskList taskList, Path path){
-        File newFile = new File(path.toString(),"tasks_"+getPostFixOfFile()+".json");
-        boolean fileExist;
-        try
-        {
-            fileExist = newFile.exists();
-            if (!fileExist) {
-                fileExist = newFile.createNewFile();
-            }
-        }
-        catch(IOException e){
-            System.out.println("Error writing to file "+newFile.getAbsolutePath());
-            System.out.println(e.getMessage());
-            return;
-        }
-        if (!fileExist) {
-            System.out.println("Error writing to file "+newFile.getAbsolutePath());
-            return;
-        }
-        TaskIO.writeText(taskList,newFile);
-    }
-
-    public static void deleteFileOfTasks(Path path){
-        File newFile = new File(path.toString(),"tasks_"+getPostFixOfFile()+".json");
-        boolean isDeleted = true;
-        if (newFile.exists()) {
-            isDeleted = newFile.delete();
-        }
-        if (!isDeleted) {
-            System.out.println("Error deleting file of settings "+newFile.getAbsolutePath());
-        }
-    }
-
-    public static void saveTasksToFile(AbstractTaskList taskList){
-        Path path = Paths.get(Controller.getCurrentCatalog());
-        if (Files.exists(path, LinkOption.NOFOLLOW_LINKS) && Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
-            TaskUtil.writeTasksToCatalog(taskList,path);
-        } else {
-            System.out.println("!!! Catalog to save tasks does not exist!");
-        }
-    }
-
-    public static void setSchedulerForTask(Task currTask){
-        Timer time = new Timer();
-        RunTaskController runTaskController = new RunTaskController();
-        runTaskController.setCurrTask(currTask);
-        Controller.addNewTimer(runTaskController);
-
-        if (currTask.isRepeated()){
-            time.schedule(runTaskController, Date.from(currTask.getStartTime().atZone(ZoneId.systemDefault()).toInstant()), TimeUnit.SECONDS.toMillis(currTask.getRepeatInterval()));
-        } else{
-            time.schedule(runTaskController,Date.from(currTask.getStartTime().atZone(ZoneId.systemDefault()).toInstant()));
-        }
-    }
-
-    public static void deleteSchedulerForTask(Task currTask) {
-        RunTaskController currTimer =  Controller.getTimerForTask(currTask);
-
-        if (currTimer == null) return;
-
-        currTimer.cancel();
     }
 }

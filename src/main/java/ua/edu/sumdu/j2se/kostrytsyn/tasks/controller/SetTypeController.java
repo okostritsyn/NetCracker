@@ -23,7 +23,7 @@ public class SetTypeController extends Controller{
                 return Controller.MAIN_MENU_ACTION;
             }
 
-            TaskUtil.deleteFileOfTasks(Paths.get(Controller.getCurrentCatalog()));
+            IOUtil.deleteFileOfTasks(Paths.get(Controller.getCurrentCatalog()));
 
             Controller.setCurrentTypeList(newTypeList);
 
@@ -31,7 +31,7 @@ public class SetTypeController extends Controller{
 
             Controller.setTaskList(newTaskList);
 
-            TaskUtil.saveTasksToFile(newTaskList);
+            IOUtil.saveTasksToFile(newTaskList);
 
             System.out.println("Type of task list was changed to "+Controller.getCurrentTypeList());
         }

@@ -3,12 +3,12 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.Notification;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
 
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.TimerTask;
+import java.time.LocalDateTime;
+import java.util.concurrent.ScheduledExecutorService;
 
-public class RunTaskController extends TimerTask {
+public class RunTaskController implements Runnable {
     private Task currTask;
+    private ScheduledExecutorService scheduler;
 
     public void setCurrTask(Task task) {
         this.currTask = task;
@@ -16,27 +16,26 @@ public class RunTaskController extends TimerTask {
 
     @Override
     public void run() {
-        RunTaskController currTimer =  Controller.getTimerForTask(currTask);
 
-        if (currTimer == null) return;
-
-        Long nextTime=  currTimer.scheduledExecutionTime();
-        Long currTimeEnd = Date.from(currTask.getStartTime().atZone(ZoneId.systemDefault()).toInstant()).getTime();
-
-        if (nextTime > currTimeEnd) {
-            TaskUtil.deleteSchedulerForTask(currTask);
+        if ((LocalDateTime.now().isAfter(currTask.getEndTime()) && currTask.isRepeated()) || !currTask.isActive()) {
+            scheduler.shutdownNow();
             return;
         }
 
         try {
-             Notification currNotification = Controller.getNotificationTray();
-             currNotification.displayMessageInTray("You have a new task",currTask.getTitle().trim(),"Task manager");
+            Notification notificationInTray = Controller.getNotificationTray();
+            if (notificationInTray == null) return;
+            notificationInTray.displayMessageInTray("You have a new task",currTask.getTitle().trim(),"Task manager");
          } catch (Exception e) {
              System.out.println("An error running thread " + e.getMessage());
          }
     }
 
-    public Task getCurrTask() {
-        return this.currTask;
+    public void setManager(ScheduledExecutorService scheduler) {
+        this.scheduler = scheduler;
+    }
+
+    public ScheduledExecutorService getManager() {
+       return this.scheduler;
     }
 }

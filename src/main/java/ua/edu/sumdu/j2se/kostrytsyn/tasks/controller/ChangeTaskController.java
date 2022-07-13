@@ -4,6 +4,8 @@ import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
+import java.time.LocalDateTime;
+
 public class ChangeTaskController extends Controller{
     protected ChangeTaskController(View view, int action) {
         super(view, action);
@@ -12,14 +14,17 @@ public class ChangeTaskController extends Controller{
     protected static boolean changeTask(View view,Task currTask) {
         TaskUtil.setTitleOfTask(view, currTask);
         TaskUtil.setStartTimeOfTask(view, currTask);
-        currTask.setEndTime(currTask.getStartTime());
+        if (currTask.getEndTime().isEqual(LocalDateTime.MIN)){
+            currTask.setEndTime(currTask.getStartTime());
+        }
         boolean isRepeated = currTask.isRepeated();
         if (isRepeated) {
             TaskUtil.setEndTimeOfTask(view, currTask);
             TaskUtil.setInterval(view, currTask);
         }
 
-        TaskUtil.setSchedulerForTask(currTask);
+        BackgroundJobManager jobManager = new BackgroundJobManager();
+        Controller.addRunTaskController(jobManager.init(currTask));
 
         return true;
     }
@@ -37,7 +42,6 @@ public class ChangeTaskController extends Controller{
             TaskUtil.setActiveOfTask(view, currTask);
             if(!currTask.isActive()){
                 System.out.println("Task was deactivated!");
-                TaskUtil.deleteSchedulerForTask(currTask);
                 return Controller.CHANGE_MENU_ACTION;
             }
             TaskUtil.setTypeOfTask(view, currTask);
