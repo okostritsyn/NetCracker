@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 public class TaskUtil {
     public static void setTitleOfTask(View view, Task currTask){
@@ -195,5 +197,26 @@ public class TaskUtil {
         } else {
             System.out.println("!!! Catalog to save tasks does not exist!");
         }
+    }
+
+    public static void setSchedulerForTask(Task currTask){
+        Timer time = new Timer();
+        RunTaskController runTaskController = new RunTaskController();
+        runTaskController.setCurrTask(currTask);
+        Controller.addNewTimer(runTaskController);
+
+        if (currTask.isRepeated()){
+            time.schedule(runTaskController, Date.from(currTask.getStartTime().atZone(ZoneId.systemDefault()).toInstant()), TimeUnit.SECONDS.toMillis(currTask.getRepeatInterval()));
+        } else{
+            time.schedule(runTaskController,Date.from(currTask.getStartTime().atZone(ZoneId.systemDefault()).toInstant()));
+        }
+    }
+
+    public static void deleteSchedulerForTask(Task currTask) {
+        RunTaskController currTimer =  Controller.getTimerForTask(currTask);
+
+        if (currTimer == null) return;
+
+        currTimer.cancel();
     }
 }

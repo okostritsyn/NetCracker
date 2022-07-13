@@ -18,6 +18,9 @@ public class ChangeTaskController extends Controller{
             TaskUtil.setEndTimeOfTask(view, currTask);
             TaskUtil.setInterval(view, currTask);
         }
+
+        TaskUtil.setSchedulerForTask(currTask);
+
         return true;
     }
 
@@ -34,6 +37,7 @@ public class ChangeTaskController extends Controller{
             TaskUtil.setActiveOfTask(view, currTask);
             if(!currTask.isActive()){
                 System.out.println("Task was deactivated!");
+                TaskUtil.deleteSchedulerForTask(currTask);
                 return Controller.CHANGE_MENU_ACTION;
             }
             TaskUtil.setTypeOfTask(view, currTask);

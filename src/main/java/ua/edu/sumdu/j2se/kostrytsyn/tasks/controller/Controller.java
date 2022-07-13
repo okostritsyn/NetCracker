@@ -1,7 +1,9 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.Notification;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.ListTypes;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.TaskListFactory;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
@@ -10,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public abstract class Controller {
     public static final int MAIN_MENU_ACTION = 0;
@@ -34,6 +37,9 @@ public abstract class Controller {
     private static LocalDate periodEnd;
     private static ListTypes currentTypeList;
     private static AbstractTaskList taskList;
+    private static Notification notificationInTray;
+
+    private static ArrayList<RunTaskController> arrayOfTimers = new ArrayList<RunTaskController>();
 
     static {
         setPeriodStart(LocalDate.MIN);
@@ -112,6 +118,33 @@ public abstract class Controller {
         } else {
             TaskUtil.readTasksFromCatalog(Controller.getTaskList(),path);
         }
+
+        for (Task currTask:
+             Controller.getTaskList()) {
+            TaskUtil.setSchedulerForTask(currTask);
+        }
+    }
+
+    public static void setNotificationTray(Notification notificationInTray) {
+        Controller.notificationInTray = notificationInTray;
+    }
+
+    public static Notification getNotificationTray() {
+        return Controller.notificationInTray;
+    }
+
+    public static void addNewTimer(RunTaskController runTaskController) {
+        arrayOfTimers.add(runTaskController);
+    }
+
+    public static RunTaskController getTimerForTask(Task currTask) {
+        for (RunTaskController currTimer:
+                arrayOfTimers) {
+            if (currTimer.getCurrTask() == currTask) {
+                return currTimer;
+            };
+        }
+        return null;
     }
 
     public boolean canProcess(int action){return this.action == action;}

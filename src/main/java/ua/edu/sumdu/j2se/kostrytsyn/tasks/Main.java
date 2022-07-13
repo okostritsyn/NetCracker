@@ -8,14 +8,18 @@ import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("Let`s start!");
-
 		Controller.initialization();
+
+		Notification notificationInTray = new Notification();
+		notificationInTray.displayMessageInTray("Task manager","Let`s start!","Task manager");
+		Controller.setNotificationTray(notificationInTray);
 
 		View mainView = new MainView();
 		Controller mainController = new MainController(Controller.getTaskList(),mainView);
 		mainController.process(Controller.getTaskList());
 
 		System.out.println("Good bye!");
+		notificationInTray.closeTray();
+
 	}
 }
