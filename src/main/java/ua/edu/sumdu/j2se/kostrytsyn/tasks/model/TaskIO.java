@@ -138,7 +138,7 @@ public class TaskIO {
             GsonBuilder builder = new GsonBuilder();
             builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
             Gson gson = builder.create();
-            out.write(gson.toJson(tasks.toArray()));
+            out.write(gson.toJson(tasks==null?new Task[0]:tasks.toArray()));
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();

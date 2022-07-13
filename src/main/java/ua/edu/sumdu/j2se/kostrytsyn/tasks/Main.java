@@ -1,17 +1,21 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks;
 
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.*;
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.*;
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.*;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.Controller;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.MainController;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.MainView;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
 public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("Let`s start!");
-		AbstractTaskList taskList = TaskListFactory.createTaskList(Controller.getCurrentTypeList());
+
+		Controller.initialization();
+
 		View mainView = new MainView();
-		Controller mainController = new MainController(taskList,mainView);
-		mainController.process(taskList);
+		Controller mainController = new MainController(Controller.getTaskList(),mainView);
+		mainController.process(Controller.getTaskList());
+
 		System.out.println("Good bye!");
 	}
 }

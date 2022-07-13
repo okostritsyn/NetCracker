@@ -15,23 +15,23 @@ public interface View {
 
     default void printListOfTasks(AbstractTaskList taskList){
         System.out.println("List of tasks: current period - "+ Controller.getCurrentPeriodStr());
+        System.out.printf("%-2s %-30s %-1s %-20s %-20s %-2s", "№", "Title", "A", "Start date", "End date", "Interval");
+        System.out.println(" ");
 
-        if (taskList == null || taskList.size() == 0 ) {
-            System.out.println("<List of tasks is empty>");
-        }else {
-            System.out.printf("%-2s %-30s %-1s %-20s %-20s %-2s", "№", "Title", "A", "Start date", "End date", "Interval");
-            System.out.println(" ");
-            int i = 1;
-            for (Task task : taskList) {
+        int i = 0;
+        for (Task task : taskList) {
 
-                if (task.getStartTime().toLocalDate().isAfter(Controller.getPeriodEnd()) ||
-                        task.getEndTime().toLocalDate().isBefore(Controller.getPeriodStart())) {
-                    continue;
-                }
-                System.out.printf("%-2s %-30s %-1s %-20s %-20s %-2s", Integer.toString(i), task.getTitle().trim(), task.isActive()?"\u2713":" ", task.getStartTimeStr(),task.getEndTimeStr(),Integer.toString(task.getRepeatInterval()));
-                System.out.println(" ");
-                i++;
+            if (task.getStartTime().toLocalDate().isAfter(Controller.getPeriodEnd()) ||
+                    task.getEndTime().toLocalDate().isBefore(Controller.getPeriodStart())) {
+                continue;
             }
+            i++;
+            System.out.printf("%-2s %-30s %-1s %-20s %-20s %-2s", i, task.getTitle().trim(), task.isActive()?"\u2713":" ", task.getStartTimeStr(),task.getEndTimeStr(),task.getRepeatInterval());
+            System.out.println(" ");
+        }
+
+        if (i == 0) {
+            System.out.println("<List of tasks is empty>");
         }
     }
 
@@ -48,8 +48,9 @@ public interface View {
 
     default String collectDataFromUser(String message, String currentValue){
         System.out.println(message);
-        //if (!currentValue.isEmpty()) System.out.append(currentValue);
-        return readInputString();
+        if (!currentValue.isEmpty()) System.out.println("Current value: " + currentValue);
+        String currString = readInputString();
+        return currString.isEmpty()?currentValue:currString;
     }
 
     default void clearScreen(){

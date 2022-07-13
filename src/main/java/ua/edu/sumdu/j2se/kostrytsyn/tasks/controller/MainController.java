@@ -1,18 +1,19 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.*;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.ChangeMenuView;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.SettingsMenuView;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainController extends Controller {
-    private final AbstractTaskList taskList;
     private final List<Controller> controllers = new ArrayList<>();
 
     public MainController(AbstractTaskList taskList, View mainView){
         super(mainView,Controller.MAIN_MENU_ACTION);
-        this.taskList = taskList;
+        Controller.setTaskList(taskList);
         controllers.add(this);
         controllers.add(new ChangeMenuController(taskList,new ChangeMenuView()));
         controllers.add(new SettingsMenuController(taskList,new SettingsMenuView()));
@@ -28,10 +29,13 @@ public class MainController extends Controller {
         do {
             for (Controller controller : controllers) {
                 if (controller.canProcess(action)) {
-                    action = controller.process(this.taskList);
+                    action = controller.process(Controller.getTaskList());
                 }
             }
         } while (action != FINISH_ACTION);
+
+        TaskUtil.saveTasksToFile(taskList);
+
         return FINISH_ACTION;
     }
 }

@@ -10,7 +10,7 @@ public class SettingsMenuView implements View {
         System.out.println("Make a choice:");
         System.out.println("1. Save tasks to file");
         System.out.println("2. Set type of list");
-        System.out.println("3. Return");
+        System.out.println("0. Return");
     }
 
     @Override
@@ -21,6 +21,6 @@ public class SettingsMenuView implements View {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        return variant==3 ? Controller.MAIN_MENU_ACTION : variant+Controller.SHIFT_MENU_SETTINGS;
+        return variant==0 ? Controller.MAIN_MENU_ACTION : variant+Controller.SHIFT_MENU_SETTINGS;
     }
 }
