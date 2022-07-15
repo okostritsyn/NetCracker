@@ -2,22 +2,15 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.view;
 
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
-public class AddTaskView implements View {
+public class AddTaskView extends AbstractView {
     @Override
     public int readAction() {
-        int selectedElement;
-        try {
-            selectedElement = Integer.parseInt(readInputString());
-        } catch (NumberFormatException e) {
-            System.out.println("incorrect number! Make your choice:");
-            return readAction();
-        }
+        int selectedElement = super.readAction();
 
-        if (selectedElement < 0 || selectedElement > 2) {
+        if (!checkAction(selectedElement, 0, 2)) {
             System.out.println("incorrect number! Make your choice: ");
             return readAction();
         }
-
         return selectedElement;
     }
 

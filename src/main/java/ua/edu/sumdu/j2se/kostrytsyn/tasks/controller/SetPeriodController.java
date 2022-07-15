@@ -17,10 +17,10 @@ public class SetPeriodController extends Controller{
             return Controller.CHANGE_MENU_ACTION;
         } else if(currAction == 1){
             String stringDateStart = view.collectDataFromUser("Enter start time of the tasks (dd-mm-yyyy):",Controller.getPeriodStartStr());
-            Controller.setPeriodStart(stringDateStart.equals("<not set>")?LocalDate.MIN:TaskUtil.parseDateFromString(view,stringDateStart));
+            Controller.setPeriodStart(stringDateStart.equals("<not set>")?LocalDate.MIN:CollectDataUtil.parseDateFromString(view,stringDateStart));
 
             String stringDateEnd = view.collectDataFromUser("Enter end time of the tasks (dd-mm-yyyy):",Controller.getPeriodEndStr());
-            Controller.setPeriodEnd(stringDateEnd.equals("<not set>")?LocalDate.MAX:TaskUtil.parseDateFromString(view,stringDateEnd));
+            Controller.setPeriodEnd(stringDateEnd.equals("<not set>")?LocalDate.MAX:CollectDataUtil.parseDateFromString(view,stringDateEnd));
         } else {
             Controller.setPeriodStart(LocalDate.MIN);
             Controller.setPeriodEnd(LocalDate.MAX);

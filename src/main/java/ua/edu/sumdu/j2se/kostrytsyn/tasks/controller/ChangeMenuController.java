@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChangeMenuController extends Controller{
-    private AbstractTaskList taskList;
-    private List<Controller> controllers = new ArrayList<>();
+    private final List<Controller> controllers = new ArrayList<>();
 
-    public ChangeMenuController(AbstractTaskList taskList, View mainView){
+    public ChangeMenuController(View mainView){
         super(mainView,Controller.CHANGE_MENU_ACTION);
-        this.taskList = taskList;
         controllers.add(this);
         controllers.add(new AddTaskController(new AddTaskView(),Controller.ADD_TASK_ACTION));
         controllers.add(new ChangeTaskController(new ChangeTaskView(),Controller.CHANGE_ACTION));
@@ -26,18 +24,9 @@ public class ChangeMenuController extends Controller{
     @Override
     public int process(AbstractTaskList taskList) {
         int action = super.process(taskList);
-
-        if (controllers.size() == 0){
-            action = MAIN_MENU_ACTION;
+        if (action != 0) {
+            return processMenu(action,Controller.CHANGE_MENU_ACTION,controllers,ChangeMenuController.class.getName());
         }
-
-        do {
-            for (Controller controller : controllers) {
-                if (controller.canProcess(action)) {
-                    action = controller.process(this.taskList);
-                }
-            }
-        } while (action != MAIN_MENU_ACTION);
-        return MAIN_MENU_ACTION;
+        return Controller.MAIN_MENU_ACTION;
     }
 }

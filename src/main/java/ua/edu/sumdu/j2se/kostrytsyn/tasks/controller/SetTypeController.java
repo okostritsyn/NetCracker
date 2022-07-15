@@ -20,7 +20,8 @@ public class SetTypeController extends Controller{
             ListTypes newTypeList = currAction == 1? ListTypes.ARRAY:ListTypes.LINKED;
 
             if (Controller.getCurrentTypeList().equals(newTypeList)) {
-                return Controller.MAIN_MENU_ACTION;
+                System.out.println("Type of task was not changed");
+                return Controller.SETTINGS_ACTION;
             }
 
             IOUtil.deleteFileOfTasks(Paths.get(Controller.getCurrentCatalog()));
@@ -35,7 +36,7 @@ public class SetTypeController extends Controller{
 
             System.out.println("Type of task list was changed to "+Controller.getCurrentTypeList());
         }
-        return Controller.MAIN_MENU_ACTION;
+        return Controller.SETTINGS_ACTION;
     }
 
     private AbstractTaskList makeCopyTasksToNewTaskList(AbstractTaskList currList, ListTypes newTypeList) {

@@ -3,14 +3,7 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-
-public class TaskUtil {
+public class TaskDataUtil {
     public static void setTitleOfTask(View view, Task currTask){
         String title = view.collectDataFromUser("Enter title of the task:",currTask.getTitle());
         if (title.isEmpty()) title = "<none>";
@@ -34,56 +27,14 @@ public class TaskUtil {
         }
     }
 
-    private static LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
-        return dateToConvert.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-    }
-
-    private static LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        return dateToConvert.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-    }
-
-    public static LocalDate parseDateFromString(View view, String stringDate){
-        String currFormat = "\\d{2}-\\d{2}-\\d{4}";
-        if(!stringDate.matches(currFormat)){
-            System.out.println("incorrect date! Insert date in format dd-mm-yyyy");
-            return parseDateFromString(view,view.readInputString());
-        }
-        try {
-            Date date=new SimpleDateFormat("dd-MM-yyyy").parse(stringDate);
-            return convertToLocalDateViaInstant(date);
-        } catch (ParseException e) {
-            System.out.println("incorrect date! Insert date in format dd-mm-yyyy");
-            return parseDateFromString(view,view.readInputString());
-        }
-    }
-
-    public static LocalDateTime parseDateTimeFromString(View view,String stringDate){
-        String currFormat = "\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}";
-        if(!stringDate.matches(currFormat)){
-            System.out.println("incorrect date! Insert date in format dd-mm-yyyy hh:mm");
-            return parseDateTimeFromString(view,view.readInputString());
-        }
-        try {
-            Date date=new SimpleDateFormat("dd-MM-yyyy hh:mm").parse(stringDate);
-            return convertToLocalDateTimeViaInstant(date);
-        } catch (ParseException e) {
-            System.out.println("incorrect date! Insert date in format dd-mm-yyyy hh:mm");
-            return parseDateTimeFromString(view,view.readInputString());
-        }
-    }
-
     public static void setStartTimeOfTask(View view,Task currTask){
         String stringDate = view.collectDataFromUser("Enter start time of the task (dd-mm-yyyy hh:mm):",currTask.getStartTimeStr());
-        currTask.setStartTime(parseDateTimeFromString(view,stringDate));
+        currTask.setStartTime(CollectDataUtil.parseDateTimeFromString(view,stringDate));
     }
 
     public static void setEndTimeOfTask(View view,Task currTask){
         String stringDate = view.collectDataFromUser("Enter end time of the task (dd-mm-yyyy hh:mm):",currTask.getEndTimeStr());
-        currTask.setEndTime(parseDateTimeFromString(view,stringDate));
+        currTask.setEndTime(CollectDataUtil.parseDateTimeFromString(view,stringDate));
     }
 
     public static void setInterval(View view,Task currTask){

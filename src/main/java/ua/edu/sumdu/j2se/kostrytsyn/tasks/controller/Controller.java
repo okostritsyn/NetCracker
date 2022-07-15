@@ -1,10 +1,12 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.Notification;
+import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.ListTypes;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.TaskListFactory;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.notifications.Notification;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.notifications.NotificationInTray;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
 import java.io.File;
@@ -13,6 +15,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Controller {
     public static final int MAIN_MENU_ACTION = 0;
@@ -38,7 +41,7 @@ public abstract class Controller {
     private static ListTypes currentTypeList;
     private static AbstractTaskList taskList;
 
-    private static Notification notificationInTray;
+    private static Notification notification;
     private static ArrayList<RunTaskController> runTasks;
 
     static {
@@ -52,12 +55,14 @@ public abstract class Controller {
         this.action = action;
     }
 
-    public static void setNotificationTray(Notification notificationInTray) {
-        Controller.notificationInTray = notificationInTray;
+    private static void initNotification() {
+        Controller.notification = new NotificationInTray();
+        Controller.notification.init();
+        Controller.notification.displayMessage("Task manager","Let`s start!");
     }
 
-    public static Notification getNotificationTray() {
-        return Controller.notificationInTray;
+    public static Notification getNotification() {
+        return Controller.notification;
     }
 
     public static void setPeriodStart(LocalDate period){
@@ -115,6 +120,37 @@ public abstract class Controller {
     }
 
     public static void initialization() {
+        initNotification();
+
+        initTypeofList();
+
+        readTasks();
+
+        initScheduler();
+    }
+
+    private static void readTasks() {
+        Path path = Paths.get(getCurrentCatalog());
+
+        File currFile = new File(path.toString(),"tasks_"+ IOUtil.getPostFixOfFile()+".json");
+        if (!currFile.exists()){
+            IOUtil.saveTasksToFile(Controller.getTaskList());
+        } else {
+            IOUtil.readTasksFromCatalog(Controller.getTaskList(),path);
+        }
+    }
+
+    private static void initScheduler() {
+        runTasks = new ArrayList<>(Controller.getTaskList().size() == 0?10:Controller.getTaskList().size()*2);
+
+        for (Task currTask:
+                Controller.getTaskList()) {
+            BackgroundJobManager jobManager = new BackgroundJobManager();
+            addRunTaskController(jobManager.init(currTask));
+        }
+    }
+
+    private static void initTypeofList() {
         Path path = Paths.get(getCurrentCatalog());
 
         File newFile = new File(path.toString(),"tasks_array.json");
@@ -123,24 +159,14 @@ public abstract class Controller {
         }
 
         Controller.setTaskList(TaskListFactory.createTaskList(Controller.getCurrentTypeList()));
-
-        File currFile = new File(path.toString(),"tasks_"+ IOUtil.getPostFixOfFile()+".json");
-        if (!currFile.exists()){
-            IOUtil.saveTasksToFile(Controller.getTaskList());
-        } else {
-            IOUtil.readTasksFromCatalog(Controller.getTaskList(),path);
-        }
-        runTasks = new ArrayList<>(Controller.getTaskList().size()*2);
-
-        for (Task currTask:
-             Controller.getTaskList()) {
-            BackgroundJobManager jobManager = new BackgroundJobManager();
-            addRunTaskController(jobManager.init(currTask));
-        }
     }
 
     protected static ArrayList<RunTaskController> RunTaskControllers() {
         return runTasks;
+    }
+
+    public static void closeNotification() {
+        Controller.notification.close();
     }
 
     public boolean canProcess(int action){return this.action == action;}
@@ -148,5 +174,22 @@ public abstract class Controller {
     public int process(AbstractTaskList taskList){
         view.printInfo(taskList);
         return view.readAction();
+    }
+
+    public int processMenu(int action,int finishAction,List<Controller>  controllers,String className){
+        final Logger logger = Logger.getLogger(className);
+
+        if (controllers.size() == 0){
+            logger.error("There is no controllers to process! ");
+            action = finishAction;
+        }
+        do {
+            for (Controller controller : controllers) {
+                if (controller.canProcess(action)) {
+                    action = controller.process(Controller.getTaskList());
+                }
+            }
+        } while (action != finishAction);
+        return action;
     }
 }

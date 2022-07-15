@@ -2,25 +2,18 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.view;
 
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
-public class ChangeTaskView implements View {
+public class ChangeTaskView extends AbstractView {
     int maxElement;
-
     @Override
     public int readAction() {
-        int selectedElement;
-        try {
-            selectedElement = Integer.parseInt(readInputString());
-        } catch (NumberFormatException e) {
-            System.out.println("incorrect number! Make your choice:");
-            return readAction();
-        }
+        int selectedElement = super.readAction();
 
-        if (selectedElement < 0 || selectedElement > maxElement) {
+        if (!checkAction(selectedElement,0,maxElement)){
             System.out.println("incorrect number! Make your choice: ");
             return readAction();
         }
 
-        return selectedElement;
+       return selectedElement;
     }
 
     @Override

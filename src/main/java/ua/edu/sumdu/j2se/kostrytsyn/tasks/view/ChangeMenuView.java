@@ -3,23 +3,21 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.view;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.Controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
-public class ChangeMenuView implements View {
+public class ChangeMenuView extends AbstractView {
     @Override
     public int readAction() {
-        int variant;
-        try{
-            variant = Integer.parseInt(readInputString());
-        } catch (NumberFormatException e) {
-            System.out.println("incorrect number! Make a choice:");
+        int selectedElement = super.readAction();
+
+        if (!checkAction(selectedElement,0,4)){
+            System.out.println("incorrect number! Make your choice: ");
             return readAction();
         }
-        if (variant==0) {
+
+        if (selectedElement==0) {
             return Controller.MAIN_MENU_ACTION;
-        }else if(variant < 0 || variant > 4) {
-            System.out.println("incorrect number! Make a choice:");
-            return readAction();
         }
-        return variant  + Controller.SHIFT_MENU_TASK;
+
+        return selectedElement  + Controller.SHIFT_MENU_TASK;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
+import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.ListTypes;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.TaskIO;
@@ -12,58 +13,60 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class IOUtil {
-    public static String getPostFixOfFile(){
-        return Controller.getCurrentTypeList().equals(ListTypes.LINKED)?"linked":"array";
+    final static Logger logger = Logger.getLogger(IOUtil.class);
+
+    public static String getPostFixOfFile() {
+        return Controller.getCurrentTypeList().equals(ListTypes.LINKED) ? "linked" : "array";
     }
 
-    public static void readTasksFromCatalog(AbstractTaskList taskList, Path path){
-        File newFile = new File(path.toString(),"tasks_"+getPostFixOfFile()+".json");
+    public static void readTasksFromCatalog(AbstractTaskList taskList, Path path) {
+        File newFile = new File(path.toString(), "tasks_" + getPostFixOfFile() + ".json");
         boolean fileExist = newFile.exists();
         if (!fileExist) {
             return;
         }
-        TaskIO.readText(taskList,newFile);
+        TaskIO.readText(taskList, newFile);
     }
 
-    public static void writeTasksToCatalog(AbstractTaskList taskList, Path path){
-        File newFile = new File(path.toString(),"tasks_"+getPostFixOfFile()+".json");
+    public static void writeTasksToCatalog(AbstractTaskList taskList, Path path) {
+        File newFile = new File(path.toString(), "tasks_" + getPostFixOfFile() + ".json");
         boolean fileExist;
-        try
-        {
+        try {
             fileExist = newFile.exists();
             if (!fileExist) {
                 fileExist = newFile.createNewFile();
             }
-        }
-        catch(IOException e){
-            System.out.println("Error writing to file "+newFile.getAbsolutePath());
+        } catch (IOException e) {
+            System.out.println("Error writing to file " + newFile.getAbsolutePath());
             System.out.println(e.getMessage());
+            logger.error("Error writing to file " + newFile.getAbsolutePath(), e);
             return;
         }
         if (!fileExist) {
-            System.out.println("Error writing to file "+newFile.getAbsolutePath());
+            System.out.println("Error writing to file " + newFile.getAbsolutePath());
             return;
         }
-        TaskIO.writeText(taskList,newFile);
+        TaskIO.writeText(taskList, newFile);
     }
 
-    public static void deleteFileOfTasks(Path path){
-        File newFile = new File(path.toString(),"tasks_"+getPostFixOfFile()+".json");
+    public static void deleteFileOfTasks(Path path) {
+        File newFile = new File(path.toString(), "tasks_" + getPostFixOfFile() + ".json");
         boolean isDeleted = true;
         if (newFile.exists()) {
             isDeleted = newFile.delete();
         }
         if (!isDeleted) {
-            System.out.println("Error deleting file of settings "+newFile.getAbsolutePath());
+            System.out.println("Error deleting file of settings " + newFile.getAbsolutePath());
         }
     }
 
-    public static void saveTasksToFile(AbstractTaskList taskList){
+    public static void saveTasksToFile(AbstractTaskList taskList) {
         Path path = Paths.get(Controller.getCurrentCatalog());
         if (Files.exists(path, LinkOption.NOFOLLOW_LINKS) && Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
-            IOUtil.writeTasksToCatalog(taskList,path);
+            IOUtil.writeTasksToCatalog(taskList, path);
         } else {
             System.out.println("!!! Catalog to save tasks does not exist!");
         }
     }
+
 }

@@ -33,6 +33,6 @@ public class SaveTasksToFileController extends Controller{
             IOUtil.writeTasksToCatalog(taskList,path);
             System.out.println("File saved to catalog!");
         }
-        return Controller.MAIN_MENU_ACTION;
+        return Controller.SETTINGS_ACTION;
     }
 }

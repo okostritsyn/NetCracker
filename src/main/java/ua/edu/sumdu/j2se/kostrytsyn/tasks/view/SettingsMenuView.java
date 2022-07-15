@@ -3,7 +3,7 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.view;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.Controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
-public class SettingsMenuView implements View {
+public class SettingsMenuView extends AbstractView {
     @Override
     public void printInfo(AbstractTaskList taskList) {
         clearScreen();
@@ -15,12 +15,17 @@ public class SettingsMenuView implements View {
 
     @Override
     public int readAction() {
-        int variant = 0;
-        try{
-            variant = Integer.parseInt(readInputString());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        int selectedElement = super.readAction();
+
+        if (!checkAction(selectedElement, 0, 2)) {
+            System.out.println("incorrect number! Make your choice: ");
+            return readAction();
         }
-        return variant==0 ? Controller.MAIN_MENU_ACTION : variant+Controller.SHIFT_MENU_SETTINGS;
+
+        if (selectedElement==0) {
+            return Controller.MAIN_MENU_ACTION;
+        }
+
+        return selectedElement  + Controller.SHIFT_MENU_SETTINGS;
     }
 }

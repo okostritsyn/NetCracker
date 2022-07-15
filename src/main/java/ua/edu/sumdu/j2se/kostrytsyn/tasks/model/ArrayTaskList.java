@@ -107,7 +107,6 @@ public class ArrayTaskList extends AbstractTaskList {
         arrayTask[numOfElem] = task;
         numOfElem++;
         updateHashSum();
-        System.out.println("Elements after add -- "+this);
     }
 
     /**

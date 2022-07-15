@@ -9,12 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsMenuController extends Controller{
-    private final AbstractTaskList taskList;
     private final List<Controller> controllers = new ArrayList<>();
 
-    public SettingsMenuController(AbstractTaskList taskList, View mainView){
+    public SettingsMenuController( View mainView){
         super(mainView,Controller.SETTINGS_ACTION);
-        this.taskList = taskList;
         controllers.add(this);
         controllers.add(new SaveTasksToFileController(new SaveTasksToFileView(),Controller.SET_CATALOG_ACTION));
         controllers.add(new SetTypeController(new SetTypeView(),Controller.SET_TYPE_ACTION));
@@ -22,18 +20,10 @@ public class SettingsMenuController extends Controller{
 
     @Override
     public int process(AbstractTaskList taskList) {
-        view.printInfo(taskList);
-        int action = view.readAction();
-        if (controllers.size() == 0){
-            action = MAIN_MENU_ACTION;
+        int action = super.process(taskList);
+        if (action != 0) {
+            return processMenu(action,Controller.SETTINGS_ACTION,controllers,SettingsMenuController.class.getName());
         }
-        do {
-            for (Controller controller : controllers) {
-                if (controller.canProcess(action)) {
-                    action = controller.process(this.taskList);
-                }
-            }
-        } while (action != MAIN_MENU_ACTION);
-        return MAIN_MENU_ACTION;
+        return Controller.MAIN_MENU_ACTION;
     }
 }

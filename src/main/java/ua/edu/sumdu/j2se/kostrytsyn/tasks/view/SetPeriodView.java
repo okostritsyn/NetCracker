@@ -3,7 +3,7 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.view;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.Controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
-public class SetPeriodView implements View {
+public class SetPeriodView extends AbstractView {
     @Override
     public void printInfo(AbstractTaskList taskList) {
         clearScreen();
@@ -17,22 +17,13 @@ public class SetPeriodView implements View {
 
     @Override
     public int readAction() {
+        int selectedElement = super.readAction();
 
-        int selectedElement;
-
-        try {
-            selectedElement = Integer.parseInt(readInputString());
-        } catch (NumberFormatException e) {
-            System.out.println("incorrect number! Make your choice:");
-            return readAction();
-        }
-
-        if (selectedElement < 0 || selectedElement > 2) {
+        if (!checkAction(selectedElement,0,2)){
             System.out.println("incorrect number! Make your choice: ");
             return readAction();
         }
 
         return selectedElement;
-
     }
 }

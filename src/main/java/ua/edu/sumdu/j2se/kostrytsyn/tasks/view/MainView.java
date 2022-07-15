@@ -3,24 +3,20 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.view;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.Controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 
-public class MainView implements View {
+public class MainView extends AbstractView {
 
     @Override
     public int readAction() {
-        int variant;
-        try{
-            variant = Integer.parseInt(readInputString());
-        } catch (NumberFormatException e) {
-            System.out.println("incorrect number!");
+        int selectedElement = super.readAction();
+
+        if (!checkAction(selectedElement,0,2)){
+            System.out.println("incorrect number! Make your choice: ");
             return readAction();
         }
-        if (variant==0) {
+        if (selectedElement==0) {
             return Controller.FINISH_ACTION;
-        }else if(variant < 0 || variant > 2){
-            System.out.println("incorrect number!");
-            return readAction();
         }
-        return variant;
+        return selectedElement;
     }
 
     @Override

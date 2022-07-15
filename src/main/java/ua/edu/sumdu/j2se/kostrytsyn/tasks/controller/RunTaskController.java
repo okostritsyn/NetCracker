@@ -1,7 +1,8 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
-import ua.edu.sumdu.j2se.kostrytsyn.tasks.Notification;
+import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.notifications.Notification;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ScheduledExecutorService;
@@ -9,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class RunTaskController implements Runnable {
     private Task currTask;
     private ScheduledExecutorService scheduler;
+    final static Logger logger = Logger.getLogger(RunTaskController.class);
 
     public void setCurrTask(Task task) {
         this.currTask = task;
@@ -23,12 +25,12 @@ public class RunTaskController implements Runnable {
         }
 
         try {
-            Notification notificationInTray = Controller.getNotificationTray();
-            if (notificationInTray == null) return;
-            notificationInTray.displayMessageInTray("You have a new task",currTask.getTitle().trim(),"Task manager");
+            Notification notification = Controller.getNotification();
+            if (notification == null) return;
+            notification.displayMessage("You have a new task",currTask.getTitle().trim());
          } catch (Exception e) {
-             System.out.println("An error running thread " + e.getMessage());
-         }
+             logger.error("An error running thread",e);
+        }
     }
 
     public void setManager(ScheduledExecutorService scheduler) {

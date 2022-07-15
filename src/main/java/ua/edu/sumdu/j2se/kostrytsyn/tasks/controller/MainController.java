@@ -15,24 +15,15 @@ public class MainController extends Controller {
         super(mainView,Controller.MAIN_MENU_ACTION);
         Controller.setTaskList(taskList);
         controllers.add(this);
-        controllers.add(new ChangeMenuController(taskList,new ChangeMenuView()));
-        controllers.add(new SettingsMenuController(taskList,new SettingsMenuView()));
+        controllers.add(new ChangeMenuController(new ChangeMenuView()));
+        controllers.add(new SettingsMenuController(new SettingsMenuView()));
     }
 
     @Override
     public int process(AbstractTaskList taskList) {
         int action = super.process(taskList);
 
-        if (controllers.size() == 0){
-            action = FINISH_ACTION;
-        }
-        do {
-            for (Controller controller : controllers) {
-                if (controller.canProcess(action)) {
-                    action = controller.process(Controller.getTaskList());
-                }
-            }
-        } while (action != FINISH_ACTION);
+        action = processMenu(action,Controller.FINISH_ACTION,controllers,MainController.class.getName());
 
         IOUtil.saveTasksToFile(taskList);
 
@@ -41,6 +32,6 @@ public class MainController extends Controller {
             currScheduler.getManager().shutdownNow();
         }
 
-        return FINISH_ACTION;
+        return action;
     }
 }
