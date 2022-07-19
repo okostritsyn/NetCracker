@@ -1,6 +1,6 @@
 package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
-import org.apache.log4j.Logger;
+import ua.edu.sumdu.j2se.kostrytsyn.tasks.exceptions.EmptyListOfControllersException;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.ListTypes;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
@@ -70,7 +70,7 @@ public abstract class Controller {
     }
 
     public static void addRunTaskController(RunTaskController runTask){
-        Controller.runTasks.add(runTask);
+        if (runTask != null) Controller.runTasks.add(runTask);
     }
 
     public static void setPeriodEnd(LocalDate period){
@@ -145,8 +145,17 @@ public abstract class Controller {
 
         for (Task currTask:
                 Controller.getTaskList()) {
+            if (!currTask.isActive()) continue;
             BackgroundJobManager jobManager = new BackgroundJobManager();
             addRunTaskController(jobManager.init(currTask));
+        }
+    }
+
+    private static void closeScheduler() {
+        for (RunTaskController currScheduler:Controller.RunTaskControllers()) {
+            if (currScheduler == null) continue;
+            if (!currScheduler.getManager().isShutdown())
+                currScheduler.getManager().shutdownNow();
         }
     }
 
@@ -161,12 +170,20 @@ public abstract class Controller {
         Controller.setTaskList(TaskListFactory.createTaskList(Controller.getCurrentTypeList()));
     }
 
-    protected static ArrayList<RunTaskController> RunTaskControllers() {
-        return runTasks;
+    public static ArrayList<RunTaskController> RunTaskControllers() {
+        return Controller.runTasks;
     }
 
     public static void closeNotification() {
         Controller.notification.close();
+    }
+
+    public static void finishWork() {
+        IOUtil.saveTasksToFile(Controller.getTaskList());
+
+        closeScheduler();
+
+        closeNotification();
     }
 
     public boolean canProcess(int action){return this.action == action;}
@@ -176,12 +193,9 @@ public abstract class Controller {
         return view.readAction();
     }
 
-    public int processMenu(int action,int finishAction,List<Controller>  controllers,String className){
-        final Logger logger = Logger.getLogger(className);
-
+    public int processMenu(int action,int finishAction,List<Controller>  controllers) throws EmptyListOfControllersException {
         if (controllers.size() == 0){
-            logger.error("There is no controllers to process! ");
-            action = finishAction;
+            throw new EmptyListOfControllersException("There is no controllers to process! ");
         }
         do {
             for (Controller controller : controllers) {

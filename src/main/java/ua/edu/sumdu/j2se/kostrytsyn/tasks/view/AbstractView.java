@@ -4,15 +4,23 @@ import ua.edu.sumdu.j2se.kostrytsyn.tasks.controller.Controller;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.AbstractTaskList;
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.model.Task;
 
+import java.io.IOException;
+
 public abstract class AbstractView implements View {
     @Override
     public int readAction() {
         int selectedElement;
-        try {
-            selectedElement = Integer.parseInt(readInputString());
-        } catch (NumberFormatException e) {
-            System.out.println("incorrect number! Make your choice:");
-            return readAction();
+        while(true){
+            try {
+                selectedElement = Integer.parseInt(readInputString());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("incorrect number! Make your choice:");
+            }
+            catch (IOException e) {
+                System.out.println("An error while reading input number!");
+                System.exit(0);
+            }
         }
         return selectedElement;
     }
@@ -34,7 +42,7 @@ public abstract class AbstractView implements View {
                 continue;
             }
             i++;
-            System.out.printf("%-2s %-30s %-1s %-20s %-20s %-2s", i, task.getTitle().trim(), task.isActive() ? "\u2713" : " ", task.getStartTimeStr(), task.getEndTimeStr(), task.getRepeatInterval());
+            System.out.printf("%-2s %-30s %-1s %-20s %-20s %-2s", i, task.getTitle().trim().substring(0, Math.min(task.getTitle().trim().length(), 30)), task.isActive() ? "\u2713" : " ", task.getStartTimeStr(), task.getEndTimeStr(), task.getRepeatInterval());
             System.out.println(" ");
         }
 
@@ -47,8 +55,13 @@ public abstract class AbstractView implements View {
     public String collectDataFromUser(String message, String currentValue) {
         System.out.println(message);
         if (!currentValue.isEmpty()) System.out.println("Current value: " + currentValue);
-        String currString = readInputString();
-        return currString.isEmpty() ? currentValue : currString;
+        String currString = null;
+        try {
+            currString = readInputString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return currString != null && currString.isEmpty() ? currentValue : currString;
     }
 
     @Override

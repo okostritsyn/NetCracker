@@ -8,9 +8,9 @@ public class ChangeTaskView extends AbstractView {
     public int readAction() {
         int selectedElement = super.readAction();
 
-        if (!checkAction(selectedElement,0,maxElement)){
+        while(!checkAction(selectedElement,0,maxElement)){
             System.out.println("incorrect number! Make your choice: ");
-            return readAction();
+            selectedElement = super.readAction();
         }
 
        return selectedElement;

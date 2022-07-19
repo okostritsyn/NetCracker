@@ -25,7 +25,7 @@ public class BackgroundJobManager {
         if (currTask.isRepeated()){
             scheduler.scheduleAtFixedRate(runTaskController, 0,currTask.getRepeatInterval(), TimeUnit.HOURS);
         } else{
-            scheduler.schedule(runTaskController, 3, TimeUnit.HOURS);
+            scheduler.schedule(runTaskController, 3, TimeUnit.SECONDS);
         }
         return runTaskController;
     }

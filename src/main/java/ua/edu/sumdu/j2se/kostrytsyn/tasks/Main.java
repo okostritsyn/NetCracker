@@ -14,9 +14,8 @@ public class Main {
 		Controller mainController = new MainController(Controller.getTaskList(),mainView);
 		mainController.process(Controller.getTaskList());
 
-		Controller.closeNotification();
+		Controller.finishWork();
 
 		System.out.println("Good bye!");
-
 	}
 }

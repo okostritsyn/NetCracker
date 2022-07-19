@@ -19,9 +19,9 @@ public class SetPeriodView extends AbstractView {
     public int readAction() {
         int selectedElement = super.readAction();
 
-        if (!checkAction(selectedElement,0,2)){
+        while(!checkAction(selectedElement,0,2)){
             System.out.println("incorrect number! Make your choice: ");
-            return readAction();
+            selectedElement = super.readAction();
         }
 
         return selectedElement;

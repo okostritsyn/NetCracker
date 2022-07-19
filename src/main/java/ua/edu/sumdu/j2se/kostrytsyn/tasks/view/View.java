@@ -14,16 +14,15 @@ public interface View {
 
     int readAction();
 
-    default String readInputString() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    default String readInputString() throws IOException {
         Logger logger = Logger.getLogger(View.class);
-
-        String data = "";
-        try {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String data;
+        try  {
             data = reader.readLine();
         } catch (IOException e) {
             logger.error("Error while read buffer", e);
-            e.printStackTrace();
+            throw new IOException(e);
         }
         return data.trim();
     }

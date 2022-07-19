@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.kostrytsyn.tasks.controller;
 
 import ua.edu.sumdu.j2se.kostrytsyn.tasks.view.View;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -24,31 +25,54 @@ public class CollectDataUtil {
 
     public static LocalDate parseDateFromString(View view, String stringDate){
         String currFormat = "\\d{2}-\\d{2}-\\d{4}";
-        if(!stringDate.matches(currFormat)){
-            System.out.println("incorrect date! Insert date in format dd-mm-yyyy");
-            return parseDateFromString(view,view.readInputString());
-        }
-        try {
-            Date date=new SimpleDateFormat("dd-MM-yyyy").parse(stringDate);
-            return convertToLocalDateViaInstant(date);
-        } catch (ParseException e) {
-            System.out.println("incorrect date! Insert date in format dd-mm-yyyy");
-            return parseDateFromString(view,view.readInputString());
-        }
+        boolean convertError = !stringDate.matches(currFormat);
+        LocalDate resultDay = LocalDate.MIN;
+        do {
+            if (convertError) {
+                System.out.println("incorrect date! Insert date in format dd-mm-yyyy hh:mm");
+                try {
+                    stringDate = view.readInputString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                convertError = !stringDate.matches(currFormat);
+                if (convertError) continue;
+            }
+            try {
+                Date date = new SimpleDateFormat("dd-MM-yyyy").parse(stringDate);
+                resultDay = convertToLocalDateViaInstant(date);
+            } catch (ParseException e) {
+                convertError = true;
+            }
+        }while(convertError);
+
+        return resultDay;
     }
 
     public static LocalDateTime parseDateTimeFromString(View view,String stringDate){
         String currFormat = "\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}";
-        if(!stringDate.matches(currFormat)){
-            System.out.println("incorrect date! Insert date in format dd-mm-yyyy hh:mm");
-            return parseDateTimeFromString(view,view.readInputString());
-        }
-        try {
-            Date date=new SimpleDateFormat("dd-MM-yyyy hh:mm").parse(stringDate);
-            return convertToLocalDateTimeViaInstant(date);
-        } catch (ParseException e) {
-            System.out.println("incorrect date! Insert date in format dd-mm-yyyy hh:mm");
-            return parseDateTimeFromString(view,view.readInputString());
-        }
+        boolean convertError = !stringDate.matches(currFormat);
+        LocalDateTime resultDay = LocalDateTime.MIN;
+        do {
+            if (convertError) {
+                System.out.println("incorrect date! Insert date in format dd-mm-yyyy hh:mm");
+                try {
+                    stringDate = view.readInputString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                convertError = !stringDate.matches(currFormat);
+                if (convertError) continue;
+            }
+            try {
+                Date date = new SimpleDateFormat("dd-MM-yyyy hh:mm").parse(stringDate);
+                resultDay = convertToLocalDateTimeViaInstant(date);
+            } catch (ParseException e) {
+                System.out.println("incorrect date! Insert date in format dd-mm-yyyy hh:mm");
+                convertError = true;
+            }
+        }while(convertError);
+
+       return resultDay;
     }
 }
