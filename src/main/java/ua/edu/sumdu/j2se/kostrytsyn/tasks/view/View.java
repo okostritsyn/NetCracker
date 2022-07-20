@@ -9,14 +9,13 @@ import java.io.InputStreamReader;
 
 public interface View {
     void printInfo(AbstractTaskList taskList);
-
+    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     String collectDataFromUser(String message, String currentValue);
 
     int readAction();
 
     default String readInputString() throws IOException {
         Logger logger = Logger.getLogger(View.class);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String data;
         try  {
             data = reader.readLine();
